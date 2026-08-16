@@ -46,19 +46,24 @@
       border-radius: 999px;
       box-shadow: var(--shadow);
     }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 240px;
-    }
-    .logo{
-  width: 126px;
-  height: 126px;
-  border-radius: 30px;
+    /* Stack logo above text */
+.brand{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Make logo about 20% of the screen width */
+.logo{
+  width: 20vw;        /* ~20% of viewport width */
+  max-width: 260px;  /* prevents it getting huge */
+  min-width: 140px;  /* keeps it readable */
+  height: auto;      /* keep aspect ratio */
+  border-radius: 24px;
   object-fit: cover;
   display: block;
-  margin-right: 16px; /* optional spacing from the title */
+  margin: 0 auto 8px auto; /* spacing below */
 }
     .brand h1{
       margin:0;
