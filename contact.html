@@ -108,13 +108,39 @@
       .topbar{border-radius: 20px}
       .brand{min-width:auto}
     }
+
+    /* Mobile-specific adjustments for small screens */
+    @media (max-width: 520px) {
+      .logo{
+        width: 36vw;
+        max-width: 180px;
+        min-width: 100px;
+      }
+      .topbar{
+        padding: 12px 12px;
+      }
+      .card{
+        max-width: 100%;
+        padding-left: 14px;
+        padding-right: 14px;
+        border-radius: 12px;
+      }
+      .officers-table th, .officers-table td{
+        padding: 8px 8px;
+        font-size: 13px;
+      }
+      /* Allow phone numbers to wrap on narrow devices to avoid horizontal overflow */
+      .officers-table td .phone{ white-space: normal; }
+      .hero p{ max-width: 100%; }
+    }
+
     .card{
       background: rgba(17,26,46,.68);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 22px;
-      max-width: 900px; /* widened so phone numbers don't wrap */
+      max-width: 900px; /* widened so phone numbers don't wrap on larger screens */
       margin: 0 auto;
     }
     .pill{
