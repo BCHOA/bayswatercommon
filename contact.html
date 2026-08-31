@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -139,51 +138,6 @@
       max-width: 60ch;
       font-size: 15.5px;
     }
-    .actions{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-    .action{
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      display:flex;
-      gap: 12px;
-      align-items:flex-start;
-    }
-    .icon{
-      width: 40px; height:40px;
-      border-radius: 14px;
-      display:grid; place-items:center;
-      background: linear-gradient(135deg, rgba(52,211,153,.95), rgba(96,165,250,.75));
-      color:#06111f;
-      font-weight:900;
-      flex: 0 0 auto;
-    }
-    .action h3{
-      margin: 0 0 4px;
-      font-size: 14.5px;
-    }
-    .action p{
-      margin:0;
-      color: var(--muted);
-      font-size: 13.5px;
-    }
-    .button{
-      display:inline-block;
-      margin-top: 10px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(96,165,250,.35);
-      background: rgba(96,165,250,.10);
-      color:#dbeafe;
-      font-weight:900;
-      font-size: 13px;
-      width: fit-content;
-    }
     .list{
       margin: 10px 0 0;
       padding: 0;
@@ -201,6 +155,14 @@
       font-size: 13.5px;
     }
     .list b{ color: var(--text); }
+
+    /* Officers table styling */
+    .officers-table{ width:100%; border-collapse:collapse; margin-top:16px; }
+    .officers-table th, .officers-table td{ text-align:left; padding:12px; border-bottom: 1px solid rgba(255,255,255,.04); font-size:14px; color:var(--muted); }
+    .officers-table th{ color:var(--text); font-weight:700; font-size:13.5px; }
+    .officers-table td .email-link{ color:var(--brand2); font-weight:700; text-decoration:none }
+    .officers-table td .phone{ color:var(--muted) }
+
     footer{
       padding: 26px 18px 36px;
       color: var(--muted);
@@ -243,45 +205,54 @@
         <div class="pill">✉️ Contact</div>
         <h2>Reach the HOA board</h2>
         <p>
-          Use the quick email options below so your message goes to the right place.
-          You can also email directly at:
+          For specific officers below, use the phone or email links. You can also email the board generally at
           <a href="mailto:HOABoard@BayswaterCommon.org" style="font-weight:900;">HOABoard@BayswaterCommon.org</a>
         </p>
 
-        <div class="actions">
-          <div class="action">
-            <div class="icon" aria-hidden="true">🧾</div>
-            <div>
-              <h3>Request Documents</h3>
-              <p>Ask for bylaws, covenants, or other references.</p>
-              <a class="button" href="mailto:HOABoard@BayswaterCommon.org?subject=Document%20Request%20-%20Bayswater%20Common%20HOA&body=Hi%20HOA%20Board%2C%0A%0AI'm%20requesting%20the%20following%20document(s)%3A%0A-%0A-%0A%0AThank%20you.%0A" >
-                Email with subject
-              </a>
-            </div>
-          </div>
-
-          <div class="action">
-            <div class="icon" aria-hidden="true">📅</div>
-            <div>
-              <h3>Scheduling / Calendar Questions</h3>
-              <p>Meeting times, agendas, or event questions.</p>
-              <a class="button" href="mailto:HOABoard@BayswaterCommon.org?subject=Calendar%20Question%20-%20Bayswater%20Common%20HOA&body=Hi%20HOA%20Board%2C%0A%0AMy%20question%20about%20the%20calendar%20is%3A%0A%0A-%0A%0AThanks.%0A">
-                Email with subject
-              </a>
-            </div>
-          </div>
-
-          <div class="action">
-            <div class="icon" aria-hidden="true">🛠️</div>
-            <div>
-              <h3>Concern / Maintenance</h3>
-              <p>Issues residents want the board to review.</p>
-              <a class="button" href="mailto:HOABoard@BayswaterCommon.org?subject=Maintenance%20Concern%20-%20Bayswater%20Common%20HOA&body=Hi%20HOA%20Board%2C%0A%0AI%20have%20a%20concern%20at%20%5Baddress%20or%20unit%5D%3A%0A%0A-%0A%0AAdditional%20details%3A%0A%0AThanks.%0A">
-                Email with subject
-              </a>
-            </div>
-          </div>
-        </div>
+        <!-- Officers table (replaces the previous quick-email actions) -->
+        <h3 style="margin-top:18px; margin-bottom:8px;">HOA Officers</h3>
+        <table class="officers-table" aria-label="HOA officers contact list">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Position</th>
+              <th>Phone</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Jonathan Underwood</td>
+              <td>President</td>
+              <td><a class="phone" href="tel:4705339501" aria-label="Call Jonathan Underwood">470-533-9501</a></td>
+              <td><a class="email-link" href="mailto:president@bayswatercommon.org">president@bayswatercommon.org</a></td>
+            </tr>
+            <tr>
+              <td>Christian Ghetie</td>
+              <td>Vice President</td>
+              <td>—</td>
+              <td><a class="email-link" href="mailto:vicepresident@bayswatercommon.org">vicepresident@bayswatercommon.org</a></td>
+            </tr>
+            <tr>
+              <td>Andrew Marginean</td>
+              <td>Secretary</td>
+              <td><a class="phone" href="tel:4046435588" aria-label="Call Andrew Marginean">404-643-5588</a></td>
+              <td><a class="email-link" href="mailto:secretary@bayswatercommon.org">secretary@bayswatercommon.org</a></td>
+            </tr>
+            <tr>
+              <td>Jim Lenahan</td>
+              <td>Treasurer</td>
+              <td><a class="phone" href="tel:4043142207" aria-label="Call Jim Lenahan">404-314-2207</a></td>
+              <td><a class="email-link" href="mailto:treasurer@bayswatercommon.org">treasurer@bayswatercommon.org</a></td>
+            </tr>
+            <tr>
+              <td>Tom Ford</td>
+              <td>Member At Large</td>
+              <td>—</td>
+              <td><a class="email-link" href="mailto:memberatlarge@bayswatercommon.org">memberatlarge@bayswatercommon.org</a></td>
+            </tr>
+          </tbody>
+        </table>
 
         <p style="margin-top:14px; color: var(--muted); font-size: 13.5px;">
           Please include your unit/address and a short description. If photos are needed, email them in a follow-up.
