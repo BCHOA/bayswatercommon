@@ -46,20 +46,25 @@
       border-radius: 999px;
       box-shadow: var(--shadow);
     }
+    /* Match header/logo styling used on the home page */
     .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
+
     .logo{
-      width: 42px; height:42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(52,211,153,1), rgba(96,165,250,1));
-      display:grid; place-items:center;
-      font-weight:900;
-      color: #06111f;
+      width: 20vw;        /* ~20% of viewport width */
+      max-width: 260px;  /* prevents it getting huge */
+      min-width: 140px;  /* keeps it readable */
+      height: auto;      /* keep aspect ratio */
+      border-radius: 24px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 8px auto; /* spacing below */
     }
+
     .brand h1{
       margin:0;
       font-size: 14.5px;
@@ -221,25 +226,25 @@
         </p>
 
        <ul class="list">
-  <li>
-    <div>
-      <b>BCHOA Bylaws</b><br/>
-      <span>Governing rules for HOA operations.</span>
-    </div>
-    <a class="doclink" href="assets/BCHOA%20Bylaws.pdf" target="_blank" rel="noopener">
-      Open PDF
-    </a>
-  </li>
+ <li>
+   <div>
+     <b>BCHOA Bylaws</b><br/>
+     <span>Governing rules for HOA operations.</span>
+   </div>
+   <a class="doclink" href="assets/BCHOA%20Bylaws.pdf" target="_blank" rel="noopener">
+     Open PDF
+   </a>
+ </li>
 
-  <li>
-    <div>
-      <b>BCHOA Covenants</b><br/>
-      <span>Resident agreements and guidelines.</span>
-    </div>
-    <a class="doclink" href="assets/BCHOA%20Covenants.pdf" target="_blank" rel="noopener">
-      Open PDF
-    </a>
-  </li>
+ <li>
+   <div>
+     <b>BCHOA Covenants</b><br/>
+     <span>Resident agreements and guidelines.</span>
+   </div>
+   <a class="doclink" href="assets/BCHOA%20Covenants.pdf" target="_blank" rel="noopener">
+     Open PDF
+   </a>
+ </li>
 </ul>
 
                    
