@@ -46,20 +46,26 @@
       border-radius: 999px;
       box-shadow: var(--shadow);
     }
+
+    /* Match header/logo styling used on the home page */
     .brand{
-      display:flex;
-      align-items:center;
-      gap: 12px;
-      min-width: 240px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
+
     .logo{
-      width: 42px; height:42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, rgba(52,211,153,1), rgba(96,165,250,1));
-      display:grid; place-items:center;
-      font-weight:900;
-      color: #06111f;
+      width: 20vw;        /* ~20% of viewport width */
+      max-width: 260px;  /* prevents it getting huge */
+      min-width: 140px;  /* keeps it readable */
+      height: auto;      /* keep aspect ratio */
+      border-radius: 24px;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 8px auto; /* spacing below */
     }
+
     .brand h1{
       margin:0;
       font-size: 14.5px;
@@ -108,7 +114,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 22px;
-      max-width: 700px;
+      max-width: 900px; /* widened so phone numbers don't wrap */
       margin: 0 auto;
     }
     .pill{
@@ -141,7 +147,7 @@
     .officers-table th, .officers-table td{ text-align:left; padding:12px; border-bottom: 1px solid rgba(255,255,255,.04); font-size:14px; color:var(--muted); }
     .officers-table th{ color:var(--text); font-weight:700; font-size:13.5px; }
     .officers-table td .email-link{ color:var(--brand2); font-weight:700; text-decoration:none }
-    .officers-table td .phone{ color:var(--muted) }
+    .officers-table td .phone{ color:var(--muted); white-space:nowrap; }
 
     footer{
       padding: 26px 18px 36px;
@@ -163,7 +169,12 @@
   <header>
     <div class="topbar">
       <div class="brand">
-        <div class="logo" aria-hidden="true">B</div>
+       <img
+  src="/bayswatercommon/assets/logo.jpg"
+  alt="Bayswater Common logo"
+  class="logo"
+  aria-hidden="true"
+/>
         <div>
           <h1>Bayswater Common HOA</h1>
           <p>Calendar • Documents • Contact</p>
