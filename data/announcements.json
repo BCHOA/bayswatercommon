@@ -11,8 +11,8 @@
       "id": 2,
       "title": "Annual Meeting Scheduled",
       "text": "Our annual HOA meeting is scheduled for <strong>March 15, 2025</strong>. Details and agenda will be posted soon. See the <a href=\"calendar.html\">calendar</a> for more dates.",
-      "start_date": "2025-02-01",
-      "expiry_date": "2025-03-31"
+      "start_date": "2026-02-01",
+      "expiry_date": "2027-03-31"
     }
   ]
 }
