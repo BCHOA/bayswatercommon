@@ -1,0 +1,11 @@
+{
+  "admins": [
+    {
+      "email": "treasurer@bayswatercommon.org",
+      "password_hash": "STUB_HASH_REPLACE_ME",
+      "role": "admin",
+      "expires_on": "2025-05-01",
+      "notes": "STUB: replace with real password hash and approved email addresses before publication."
+    }
+  ]
+}
