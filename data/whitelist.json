@@ -6,6 +6,13 @@
       "role": "admin",
       "expires_on": "2025-05-01",
       "notes": "STUB: replace with real password hash and approved email addresses before publication."
+    },
+    {
+      "email": "jimlenahan@aol.com",
+      "password_hash": "STUB_HASH_REPLACE_ME",
+      "role": "admin",
+      "expires_on": "2025-05-01",
+      "notes": "Added by the session for HOA admin access. Replace with a real SHA-256 hash before publishing."
     }
   ]
 }
