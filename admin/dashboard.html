@@ -69,6 +69,7 @@
     .admin-list-item{ padding:12px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.02); margin-bottom:10px; }
     .admin-list-item strong{ display:block; margin-bottom:6px; }
     .admin-list-item small{ color:var(--muted); }
+    .error{ padding:12px 14px; border-radius:10px; background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.30); color:#fca5a5; margin-bottom:16px; }
     footer{ padding:26px 18px 36px; color:var(--muted); text-align:center; font-size:13px; }
     .footerline{ max-width:1100px; margin:0 auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.10); }
   </style>
@@ -84,7 +85,7 @@
         </div>
       </div>
       <nav aria-label="Primary">
-        <a class="navlink" href="../index.html">← Back to Home</a>
+        <a class="navlink" href="/bayswatercommon/index.html">← Back to Home</a>
       </nav>
     </div>
   </header>
@@ -92,8 +93,9 @@
   <main class="container">
     <div class="card" id="loginCard">
       <div class="pill">🔐 Admin Login</div>
+      <div id="loadError" class="error hidden"></div>
       <div class="info-box">
-        <strong>Note:</strong> This is a static GitHub Pages workflow. The dashboard verifies credentials in the browser against the whitelist JSON and then lets you download the updated JSON files for manual commit.
+        <strong>Note:</strong> This is a static GitHub Pages workflow. Login verifies credentials against whitelist.json in the browser, then you can download updated JSON files to commit back to GitHub.
       </div>
       <div class="form-group">
         <label for="loginEmail">Admin Email</label>
@@ -190,11 +192,14 @@
 
   <script>
     const MAX_ANNOUNCEMENT_TEXT_LENGTH = 500;
+    const REPO_BASE = '/bayswatercommon/';
+    
     const state = {
       admins: [],
       announcements: [],
       currentUser: null,
-      whitelistDirty: false
+      whitelistDirty: false,
+      loadError: null
     };
 
     function sanitizeHtml(rawText) {
@@ -219,19 +224,41 @@
     function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
 
     async function loadWhitelist() {
-      const response = await fetch('../data/whitelist.json');
-      const json = await response.json();
-      state.admins = Array.isArray(json.admins) ? json.admins : [];
-      renderWhitelist();
-      return state.admins;
+      try {
+        const response = await fetch(REPO_BASE + 'data/whitelist.json');
+        if (!response.ok) throw new Error('Failed to load whitelist');
+        const json = await response.json();
+        state.admins = Array.isArray(json.admins) ? json.admins : [];
+        renderWhitelist();
+        return state.admins;
+      } catch (err) {
+        state.loadError = 'Could not load whitelist.json: ' + err.message;
+        showLoadError();
+        throw err;
+      }
     }
 
     async function loadAnnouncements() {
-      const response = await fetch('../data/announcements.json');
-      const json = await response.json();
-      state.announcements = Array.isArray(json.announcements) ? json.announcements : [];
-      renderAnnouncements();
-      return state.announcements;
+      try {
+        const response = await fetch(REPO_BASE + 'data/announcements.json');
+        if (!response.ok) throw new Error('Failed to load announcements');
+        const json = await response.json();
+        state.announcements = Array.isArray(json.announcements) ? json.announcements : [];
+        renderAnnouncements();
+        return state.announcements;
+      } catch (err) {
+        state.loadError = 'Could not load announcements.json: ' + err.message;
+        showLoadError();
+        throw err;
+      }
+    }
+
+    function showLoadError() {
+      const errorEl = document.getElementById('loadError');
+      if (state.loadError) {
+        errorEl.textContent = '⚠️ ' + state.loadError;
+        errorEl.classList.remove('hidden');
+      }
     }
 
     function getAdminByEmail(email) {
@@ -305,6 +332,12 @@
     async function login() {
       const email = normalizeEmail(document.getElementById('loginEmail').value);
       const password = document.getElementById('loginPassword').value;
+      
+      if (!email || !password) {
+        alert('Please enter both email and password.');
+        return;
+      }
+
       const admin = getAdminByEmail(email);
 
       if (!admin) {
@@ -378,6 +411,9 @@
         state.whitelistDirty = true;
         alert('Password updated. Download the whitelist.json file and commit it to GitHub.');
         renderWhitelist();
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
       }
     }
 
@@ -467,7 +503,7 @@
       document.getElementById('startDate').value = item.start_date || '';
       document.getElementById('expiryDate').value = item.expiry_date || '';
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      alert('Edit the values in the form and click Add Announcement again to save the updated record.');
+      alert('Edit the values in the form and add it again to update. The new announcement will replace this one.');
     }
 
     function deleteAnnouncement(id) {
@@ -497,8 +533,9 @@
       downloadJson('announcements.json', { announcements: state.announcements });
     });
 
-    Promise.all([loadWhitelist(), loadAnnouncements()]).catch(() => {
-      alert('Could not load the JSON files for the dashboard. Check that the repo paths are correct.');
+    // Load data on page init
+    Promise.all([loadWhitelist(), loadAnnouncements()]).catch(err => {
+      console.error('Initialization error:', err);
     });
   </script>
 </body>
