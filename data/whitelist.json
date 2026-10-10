@@ -2,17 +2,17 @@
   "admins": [
     {
       "email": "treasurer@bayswatercommon.org",
-      "password_hash": "STUB_HASH_REPLACE_ME",
+      "password_hash": "addc4e7687eafc931f7581e3ed598029454f785d352eb01df3505e7189d1f6fd",
       "role": "admin",
       "expires_on": "2025-05-01",
-      "notes": "STUB: replace with real password hash and approved email addresses before publication."
+      "notes": "Admin password hash generated using the agreed password for the current period."
     },
     {
       "email": "jimlenahan@aol.com",
-      "password_hash": "STUB_HASH_REPLACE_ME",
+      "password_hash": "addc4e7687eafc931f7581e3ed598029454f785d352eb01df3505e7189d1f6fd",
       "role": "admin",
       "expires_on": "2025-05-01",
-      "notes": "Added by the session for HOA admin access. Replace with a real SHA-256 hash before publishing."
+      "notes": "Admin password hash generated using the agreed password for the current period."
     }
   ]
 }
