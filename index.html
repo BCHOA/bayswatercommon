@@ -46,49 +46,46 @@
       border-radius: 999px;
       box-shadow: var(--shadow);
     }
-    /* Stack logo above text */
-.brand{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-/* Make logo about 20% of the screen width */
-.logo{
-  width: 20vw;        /* ~20% of viewport width */
-  max-width: 260px;  /* prevents it getting huge */
-  min-width: 140px;  /* keeps it readable */
-  height: auto;      /* keep aspect ratio */
-  border-radius: 24px;
-  object-fit: cover;
-  display: block;
-  margin: 0 auto 8px auto; /* spacing below */
-}
+    .brand{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+    }
+    .logo{
+      width:20vw;
+      max-width:260px;
+      min-width:140px;
+      height:auto;
+      border-radius:24px;
+      object-fit:cover;
+      display:block;
+      margin:0 auto 8px auto;
+    }
     .brand h1{
       margin:0;
-      font-size: 14.5px;
+      font-size:14.5px;
       letter-spacing:.3px;
       font-weight:800;
     }
     .brand p{
       margin:0;
-      font-size: 12.5px;
-      color: var(--muted);
+      font-size:12.5px;
+      color:var(--muted);
     }
     nav{
       display:flex;
-      gap: 8px;
+      gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
     .navlink{
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      color: var(--muted);
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid transparent;
+      color:var(--muted);
       font-weight:650;
-      font-size: 13.5px;
+      font-size:13.5px;
     }
     .navlink:hover{
       border-color: rgba(255,255,255,.14);
@@ -96,70 +93,70 @@
       color: var(--text);
     }
     .container{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px;
+      max-width:1100px;
+      margin:0 auto;
+      padding:18px;
     }
     .hero{
-      margin-top: 18px;
+      margin-top:18px;
       display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 16px;
+      grid-template-columns:1.15fr .85fr;
+      gap:16px;
       align-items:stretch;
     }
-    @media (max-width: 900px){
+    @media (max-width:900px){
       .hero{grid-template-columns:1fr}
-      .topbar{border-radius: 20px}
+      .topbar{border-radius:20px}
       .brand{min-width:auto}
     }
     .card{
       background: rgba(17,26,46,.68);
-      border: 1px solid var(--border);
+      border:1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 22px;
+      padding:22px;
     }
     .hero h2{
-      margin: 0 0 10px;
-      font-size: 28px;
-      letter-spacing: .2px;
+      margin:0 0 10px;
+      font-size:28px;
+      letter-spacing:.2px;
     }
     .hero p{
       margin:0 0 18px;
-      color: var(--muted);
-      max-width: 60ch;
-      font-size: 15.5px;
+      color:var(--muted);
+      max-width:60ch;
+      font-size:15.5px;
     }
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
+      padding:10px 12px;
+      border-radius:999px;
       background: rgba(96,165,250,.10);
-      border: 1px solid rgba(96,165,250,.25);
-      color: #dbeafe;
+      border:1px solid rgba(96,165,250,.25);
+      color:#dbeafe;
       font-weight:700;
-      font-size: 13px;
-      margin-bottom: 14px;
+      font-size:13px;
+      margin-bottom:14px;
     }
     .grid{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:12px;
+      margin-top:14px;
     }
-    @media (max-width: 520px){
+    @media (max-width:520px){
       .grid{grid-template-columns:1fr}
     }
     .action{
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
+      padding:14px;
+      border-radius:16px;
+      border:1px solid var(--border);
       background: rgba(255,255,255,.03);
       transition: transform .12s ease, border-color .12s ease, background .12s ease;
       display:flex;
-      gap: 12px;
+      gap:12px;
       align-items:flex-start;
     }
     .action:hover{
@@ -168,58 +165,93 @@
       background: rgba(255,255,255,.05);
     }
     .icon{
-      width: 40px; height:40px;
-      border-radius: 14px;
+      width:40px; height:40px;
+      border-radius:14px;
       display:grid; place-items:center;
       background: linear-gradient(135deg, rgba(52,211,153,.95), rgba(96,165,250,.75));
       color:#06111f;
       font-weight:900;
-      flex: 0 0 auto;
+      flex:0 0 auto;
     }
     .action h3{
-      margin: 0 0 4px;
-      font-size: 14.5px;
+      margin:0 0 4px;
+      font-size:14.5px;
     }
     .action p{
       margin:0;
-      color: var(--muted);
-      font-size: 13.5px;
+      color:var(--muted);
+      font-size:13.5px;
     }
     .side h3{
       margin-top:0;
-      font-size: 16px;
+      font-size:16px;
       letter-spacing:.2px;
     }
-    .list{
-      margin: 10px 0 0;
-      padding: 0;
-      list-style:none;
+    .announcements-box{
+      max-height:400px;
+      overflow-y:auto;
+      margin:10px 0 0;
+      padding:0;
       display:flex;
       flex-direction:column;
-      gap: 10px;
+      gap:10px;
     }
-    .list li{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+    .announcement{
+      padding:12px;
+      border-radius:14px;
+      border:1px solid var(--border);
       background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-size: 13.5px;
+      color:var(--text);
+      font-size:13.5px;
+      line-height:1.6;
     }
-    .list b{
+    .announcement-date{
+      color: var(--brand);
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .announcement-text{
       color: var(--text);
     }
-    footer{
-      padding: 26px 18px 36px;
-      color: var(--muted);
+    .announcement-text a{
+      color: var(--brand2);
+      text-decoration: underline;
+    }
+    .announcement-text a:hover{
+      color: var(--brand);
+    }
+    .no-announcements{
+      padding:12px;
+      color:var(--muted);
+      font-size:13.5px;
       text-align:center;
-      font-size: 13px;
+    }
+    .admin-link{
+      margin-top:14px;
+      padding-top:12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      text-align:center;
+    }
+    .admin-link a{
+      color:var(--brand2);
+      font-size:12px;
+      font-weight:700;
+    }
+    .admin-link a:hover{
+      color:var(--brand);
+    }
+    footer{
+      padding:26px 18px 36px;
+      color:var(--muted);
+      text-align:center;
+      font-size:13px;
     }
     .footerline{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
+      max-width:1100px;
+      margin:0 auto;
+      padding-top:18px;
+      border-top:1px solid rgba(255,255,255,.10);
     }
   </style>
 </head>
@@ -228,12 +260,12 @@
   <header>
     <div class="topbar">
       <div class="brand">
-       <img
-  src="/bayswatercommon/assets/logo.jpg"
-  alt="Bayswater Common logo"
-  class="logo"
-  aria-hidden="true"
-/>
+        <img
+          src="/bayswatercommon/assets/logo.jpg"
+          alt="Bayswater Common logo"
+          class="logo"
+          aria-hidden="true"
+        />
         <div>
           <h1>Bayswater Common HOA</h1>
           <p>Calendar • Documents • Contact</p>
@@ -288,24 +320,20 @@
             <div class="icon" aria-hidden="true">⭐</div>
             <div>
               <h3>Quick Tip</h3>
-              <p>Keep this page bookmarked for the latest calendar and documents.</p>
+              <p>Keep this page bookmarked for the latest announcements.</p>
             </div>
           </div>
         </div>
       </div>
 
       <aside class="card side">
-        <h3>Resident quick info</h3>
-        <ul class="list">
-          <li><b>Timezone:</b> Eastern (America/New_York) calendar display.</li>
-          <li><b>Calendar:</b> Public Google Calendar (embedded on this site).</li>
-          <li><b>Documents:</b> PDF links from the <code>assets</code> folder.</li>
-          <li><b>Contact Email:</b> <a href="mailto:HOABoard@BayswaterCommon.org">HOABoard@BayswaterCommon.org</a></li>
-        </ul>
-        <div style="height:14px"></div>
-        <p style="margin:0; color: var(--muted); font-size: 13.5px;">
-          If anything doesn’t load, give GitHub Pages 1–3 minutes and refresh.
-        </p>
+        <h3>📢 Latest Announcements</h3>
+        <div class="announcements-box" id="announcementsList">
+          <div class="no-announcements">No active announcements.</div>
+        </div>
+        <div class="admin-link">
+          <a href="admin/dashboard.html">Manage Announcements</a>
+        </div>
       </aside>
     </section>
   </main>
@@ -318,6 +346,44 @@
 
   <script>
     document.getElementById('y').textContent = new Date().getFullYear();
+
+    async function loadAnnouncements() {
+      try {
+        const response = await fetch('data/announcements.json');
+        const data = await response.json();
+        displayAnnouncements(data.announcements || []);
+      } catch (err) {
+        console.error('Failed to load announcements:', err);
+      }
+    }
+
+    function displayAnnouncements(announcements) {
+      const container = document.getElementById('announcementsList');
+      const today = new Date().toISOString().split('T')[0];
+
+      const active = announcements.filter(a => {
+        return a.start_date <= today && a.expiry_date >= today;
+      }).sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+      if (active.length === 0) {
+        container.innerHTML = '<div class=\"no-announcements\">No active announcements.</div>';
+        return;
+      }
+
+      container.innerHTML = active.map(a => `
+        <div class=\"announcement\">
+          <div class=\"announcement-date\">Since ${formatDate(a.start_date)}</div>
+          <div class=\"announcement-text\">${a.text}</div>
+        </div>
+      `).join('');
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00Z');
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    loadAnnouncements();
   </script>
 </body>
 </html>
