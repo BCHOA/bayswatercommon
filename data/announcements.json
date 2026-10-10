@@ -1,0 +1,18 @@
+{
+  "announcements": [
+    {
+      "id": 1,
+      "title": "Welcome to Bayswater Common",
+      "text": "Welcome to our new HOA website! We're excited to share updates, documents, and event information here.",
+      "start_date": "2024-01-01",
+      "expiry_date": "2025-12-31"
+    },
+    {
+      "id": 2,
+      "title": "Annual Meeting Scheduled",
+      "text": "Our annual HOA meeting is scheduled for <strong>March 15, 2025</strong>. Details and agenda will be posted soon. See the <a href=\"calendar.html\">calendar</a> for more dates.",
+      "start_date": "2025-02-01",
+      "expiry_date": "2025-03-31"
+    }
+  ]
+}
