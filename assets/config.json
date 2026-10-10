@@ -1,0 +1,12 @@
+{
+  "whitelist": [
+    "HOABoard@BayswaterCommon.org"
+  ],
+  "adminNotificationEmails": [
+    "HOABoard@BayswaterCommon.org"
+  ],
+  "gmailOAuthToken": "",
+  "gmailOAuthRefreshToken": "",
+  "gmailInboxLabel": "INBOX",
+  "passwordHash": ""
+}
