@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Announcements Dashboard — Bayswater Common HOA</title>
+  <title>Admin Dashboard — Bayswater Common HOA</title>
   <meta name="description" content="Admin dashboard for managing HOA announcements and whitelist." />
   <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 
@@ -30,58 +30,58 @@
       line-height:1.5;
     }
     a{color: inherit; text-decoration:none}
-    header{ padding:28px 18px 8px; max-width:1100px; margin:0 auto; }
-    .topbar{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 16px; border:1px solid var(--border); background:rgba(17,26,46,.55); backdrop-filter:blur(8px); border-radius:999px; box-shadow:var(--shadow); }
-    .brand{ display:flex; flex-direction:column; align-items:center; text-align:center; }
-    .logo{ width:20vw; max-width:260px; min-width:140px; height:auto; border-radius:24px; object-fit:cover; display:block; margin:0 auto 8px auto; }
-    .brand h1{ margin:0; font-size:14.5px; letter-spacing:.3px; font-weight:800; }
-    .brand p{ margin:0; font-size:12.5px; color:var(--muted); }
-    nav{ display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
-    .navlink{ padding:10px 12px; border-radius:999px; border:1px solid transparent; color:var(--muted); font-weight:650; font-size:13.5px; }
-    .navlink:hover{ border-color: rgba(255,255,255,.14); background:rgba(255,255,255,.04); color:var(--text); }
-    .container{ max-width:1100px; margin:0 auto; padding:18px; }
-    .card{ background:rgba(17,26,46,.68); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); padding:22px; margin-bottom:22px; }
-    .card h2{ margin:0 0 14px; font-size:24px; }
-    .pill{ display:inline-flex; align-items:center; gap:8px; padding:10px 12px; border-radius:999px; background:rgba(96,165,250,.10); border:1px solid rgba(96,165,250,.25); color:#dbeafe; font-weight:700; font-size:13px; margin-bottom:14px; }
-    .form-group{ margin-bottom:18px; }
-    .form-group label{ display:block; margin-bottom:6px; font-weight:650; font-size:13.5px; }
-    .form-group input, .form-group textarea, .form-group select{ width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.03); color:var(--text); font-family:inherit; font-size:14px; }
-    .form-group textarea{ min-height:100px; resize:vertical; }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus{ outline:none; border-color:var(--brand2); background:rgba(96,165,250,.08); }
-    .button-group{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
-    .btn{ padding:10px 16px; border-radius:10px; border:1px solid transparent; font-weight:650; font-size:13.5px; cursor:pointer; transition:all .12s ease; }
-    .btn-primary{ background:linear-gradient(135deg, var(--brand), var(--brand2)); color:#06111f; }
-    .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(52,211,153,.24); }
-    .btn-secondary{ background:rgba(255,255,255,.05); border-color:var(--border); color:var(--text); }
-    .btn-secondary:hover{ background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.18); }
-    .btn-danger{ background:rgba(239,68,68,.15); border-color:rgba(239,68,68,.30); color:#fca5a5; }
-    .btn-danger:hover{ background:rgba(239,68,68,.25); border-color:rgba(239,68,68,.50); }
-    .info-box{ padding:14px; border-radius:10px; border:1px solid rgba(96,165,250,.25); background:rgba(96,165,250,.10); color:#dbeafe; font-size:13.5px; margin-bottom:18px; }
-    .info-box strong{ color:#60a5fa; }
-    .announcement-item{ padding:16px; border:1px solid var(--border); border-radius:14px; background:rgba(255,255,255,.03); margin-bottom:12px; }
-    .announcement-item h4{ margin:0 0 6px; font-size:14.5px; }
-    .announcement-item p{ margin:0 0 8px; color:var(--muted); font-size:13.5px; }
-    .announcement-dates{ font-size:12px; color:var(--brand); margin-bottom:12px; }
-    .announcement-actions{ display:flex; gap:8px; }
-    .announcement-actions .btn{ padding:6px 10px; font-size:12px; }
-    .hidden{ display:none !important; }
-    .notice{ padding:12px 14px; border-radius:10px; background:rgba(96,165,250,.10); border:1px solid rgba(96,165,250,.25); color:#dbeafe; margin-bottom:16px; }
-    .admin-list-item{ padding:12px; border:1px solid var(--border); border-radius:12px; background:rgba(255,255,255,.02); margin-bottom:10px; }
-    .admin-list-item strong{ display:block; margin-bottom:6px; }
-    .admin-list-item small{ color:var(--muted); }
-    .error{ padding:12px 14px; border-radius:10px; background:rgba(239,68,68,.15); border:1px solid rgba(239,68,68,.30); color:#fca5a5; margin-bottom:16px; }
-    footer{ padding:26px 18px 36px; color:var(--muted); text-align:center; font-size:13px; }
-    .footerline{ max-width:1100px; margin:0 auto; padding-top:18px; border-top:1px solid rgba(255,255,255,.10); }
+    header{padding:28px 18px 8px;max-width:1100px;margin:0 auto;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border:1px solid var(--border);background:rgba(17,26,46,.55);backdrop-filter:blur(8px);border-radius:999px;box-shadow:var(--shadow);}
+    .brand{display:flex;flex-direction:column;align-items:center;text-align:center;}
+    .logo{width:20vw;max-width:260px;min-width:140px;height:auto;border-radius:24px;object-fit:cover;display:block;margin:0 auto 8px auto;}
+    .brand h1{margin:0;font-size:14.5px;letter-spacing:.3px;font-weight:800;}
+    .brand p{margin:0;font-size:12.5px;color:var(--muted);}
+    nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+    .navlink{padding:10px 12px;border-radius:999px;border:1px solid transparent;color:var(--muted);font-weight:650;font-size:13.5px;}
+    .navlink:hover{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:var(--text);}
+    .container{max-width:1100px;margin:0 auto;padding:18px;}
+    .card{background:rgba(17,26,46,.68);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;margin-bottom:22px;}
+    .card h2{margin:0 0 14px;font-size:24px;}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 12px;border-radius:999px;background:rgba(96,165,250,.10);border:1px solid rgba(96,165,250,.25);color:#dbeafe;font-weight:700;font-size:13px;margin-bottom:14px;}
+    .form-group{margin-bottom:18px;}
+    .form-group label{display:block;margin-bottom:6px;font-weight:650;font-size:13.5px;}
+    .form-group input,.form-group textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.03);color:var(--text);font-family:inherit;font-size:14px;}
+    .form-group textarea{min-height:100px;resize:vertical;}
+    .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--brand2);background:rgba(96,165,250,.08);}
+    .button-group{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;}
+    .btn{padding:10px 16px;border-radius:10px;border:1px solid transparent;font-weight:650;font-size:13.5px;cursor:pointer;transition:all .12s ease;}
+    .btn-primary{background:linear-gradient(135deg,var(--brand),var(--brand2));color:#06111f;}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(52,211,153,.24);}
+    .btn-secondary{background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text);}
+    .btn-secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);}
+    .btn-danger{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.30);color:#fca5a5;}
+    .btn-danger:hover{background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.50);}
+    .hidden{display:none!important;}
+    .notice{padding:12px 14px;border-radius:10px;background:rgba(96,165,250,.10);border:1px solid rgba(96,165,250,.25);color:#dbeafe;margin-bottom:16px;}
+    .error{padding:12px 14px;border-radius:10px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.30);color:#fca5a5;margin-bottom:16px;}
+    .info-box{padding:14px;border-radius:10px;border:1px solid rgba(96,165,250,.25);background:rgba(96,165,250,.10);color:#dbeafe;font-size:13.5px;margin-bottom:18px;}
+    .info-box strong{color:#60a5fa;}
+    .admin-item{padding:12px;border:1px solid var(--border);border-radius:12px;background:rgba(255,255,255,.02);margin-bottom:10px;}
+    .admin-item strong{display:block;margin-bottom:6px;}
+    .admin-item small{color:var(--muted);}
+    .announcement-item{padding:16px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);margin-bottom:12px;}
+    .announcement-item h4{margin:0 0 6px;font-size:14.5px;}
+    .announcement-item p{margin:0 0 8px;color:var(--muted);font-size:13.5px;}
+    .announcement-dates{font-size:12px;color:var(--brand);margin-bottom:12px;}
+    .announcement-actions{display:flex;gap:8px;}
+    .announcement-actions .btn{padding:6px 10px;font-size:12px;}
+    footer{padding:26px 18px 36px;color:var(--muted);text-align:center;font-size:13px;}
+    .footerline{max-width:1100px;margin:0 auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.10);}
   </style>
 </head>
 <body>
   <header>
     <div class="topbar">
       <div class="brand">
-        <img src="/bayswatercommon/assets/logo.jpg" alt="Bayswater Common logo" class="logo" aria-hidden="true" />
+        <img src="/bayswatercommon/assets/logo.jpg" alt="Bayswater Common logo" class="logo" />
         <div>
           <h1>Bayswater Common HOA</h1>
-          <p>Admin • Announcements</p>
+          <p>Admin Dashboard</p>
         </div>
       </div>
       <nav aria-label="Primary">
@@ -91,81 +91,56 @@
   </header>
 
   <main class="container">
+    <!-- LOGIN CARD -->
     <div class="card" id="loginCard">
       <div class="pill">🔐 Admin Login</div>
-      <div id="loadError" class="error hidden"></div>
+      <div id="loginError" class="error hidden"></div>
       <div class="info-box">
-        <strong>Note:</strong> This is a static GitHub Pages workflow. Login verifies credentials against whitelist.json in the browser, then you can download updated JSON files to commit back to GitHub.
+        <strong>Static GitHub Pages Workflow:</strong> Login credentials are verified client-side against <code>data/whitelist.json</code>. After login, you can manage announcements and download JSON files to commit back to GitHub.
       </div>
       <div class="form-group">
         <label for="loginEmail">Admin Email</label>
-        <input type="email" id="loginEmail" placeholder="jimlenahan@aol.com" />
+        <input type="email" id="loginEmail" placeholder="jimlenahan@aol.com" autocomplete="email" />
       </div>
       <div class="form-group">
         <label for="loginPassword">Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter password" />
+        <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" />
       </div>
       <div class="button-group">
         <button class="btn btn-primary" id="loginBtn">Log In</button>
       </div>
+      <div style="margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,.10);">
+        <p style="color:var(--muted);font-size:13px;margin:0;">
+          <strong>Credentials for testing:</strong><br>
+          Email: jimlenahan@aol.com<br>
+          Password: qqz123
+        </p>
+      </div>
     </div>
 
+    <!-- DASHBOARD CARD -->
     <div class="card hidden" id="dashboardCard">
       <div class="pill">⚙️ Admin Dashboard</div>
-      <div class="notice" id="loginNotice">Logged in.</div>
-
-      <h3 style="margin-top: 0; font-size:18px;">Change my password</h3>
-      <div class="form-group">
-        <label for="currentPassword">Current Password</label>
-        <input type="password" id="currentPassword" />
-      </div>
-      <div class="form-group">
-        <label for="newPassword">New Password</label>
-        <input type="password" id="newPassword" />
-      </div>
-      <div class="form-group">
-        <label for="confirmPassword">Confirm New Password</label>
-        <input type="password" id="confirmPassword" />
-      </div>
+      <div class="notice" id="loginNotice">Logged in as user</div>
       <div class="button-group">
-        <button class="btn btn-primary" id="changePasswordBtn">Update Password</button>
+        <button class="btn btn-danger" id="logoutBtn">Log Out</button>
       </div>
 
-      <hr style="margin:24px 0; border-color:rgba(255,255,255,.10);" />
+      <hr style="margin:24px 0;border-color:rgba(255,255,255,.10);" />
 
-      <h3 style="margin-top: 0; font-size:18px;">Whitelist</h3>
-      <div class="form-group">
-        <label for="whitelistEmail">Admin Email</label>
-        <input type="email" id="whitelistEmail" placeholder="newadmin@example.com" />
-      </div>
-      <div class="form-group">
-        <label for="whitelistPassword">Password</label>
-        <input type="password" id="whitelistPassword" placeholder="Set password" />
-      </div>
-      <div class="form-group">
-        <label for="whitelistExpiry">Expires On</label>
-        <input type="date" id="whitelistExpiry" />
-      </div>
-      <div class="button-group">
-        <button class="btn btn-primary" id="addWhitelistUserBtn">Add Whitelist User</button>
-        <button class="btn btn-secondary" id="downloadWhitelistBtn">Download whitelist.json</button>
-      </div>
-      <div id="whitelistList" style="margin-top:18px;"></div>
-
-      <hr style="margin:24px 0; border-color:rgba(255,255,255,.10);" />
-
-      <h3 style="margin-top: 0; font-size:18px;">Add announcement</h3>
+      <h3 style="margin-top:0;font-size:18px;">📝 Add Announcement</h3>
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" id="title" placeholder="Annual Meeting Scheduled" />
+        <input type="text" id="title" placeholder="e.g., Annual Meeting Scheduled" />
       </div>
-
       <div class="form-group">
-        <label for="text">Announcement Text</label>
-        <textarea id="text" placeholder="Type plain text or HTML, such as <a href='https://example.com'>link</a>."></textarea>
+        <label for="text">Announcement Text (max 500 chars)</label>
+        <textarea id="text" placeholder="Type announcement text or HTML like <strong>bold</strong> or <a href='...'>link</a>"></textarea>
+        <small style="color:var(--muted);">
+          <span id="charCount">0</span>/500 characters
+        </small>
       </div>
-
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
         <div class="form-group">
           <label for="startDate">Start Date</label>
           <input type="date" id="startDate" />
@@ -175,14 +150,15 @@
           <input type="date" id="expiryDate" />
         </div>
       </div>
-
       <div class="button-group">
         <button class="btn btn-primary" id="addAnnouncementBtn">Add Announcement</button>
         <button class="btn btn-secondary" id="downloadAnnouncementsBtn">Download announcements.json</button>
-        <button class="btn btn-danger" id="logoutBtn">Log Out</button>
       </div>
 
-      <div id="announcementsList" style="margin-top:22px;"></div>
+      <h3 style="margin-top:28px;font-size:18px;">📢 Current Announcements</h3>
+      <div id="announcementsList" style="margin-top:14px;">
+        <p style="color:var(--muted);text-align:center;padding:20px;">Loading announcements...</p>
+      </div>
     </div>
   </main>
 
@@ -191,47 +167,53 @@
   </footer>
 
   <script>
-    const MAX_ANNOUNCEMENT_TEXT_LENGTH = 500;
     const REPO_BASE = '/bayswatercommon/';
+    const MAX_ANNOUNCEMENT_TEXT_LENGTH = 500;
     
     const state = {
       admins: [],
       announcements: [],
       currentUser: null,
-      whitelistDirty: false,
       loadError: null
     };
 
-    function sanitizeHtml(rawText) {
-      const value = String(rawText || '').trim();
+    // SHA-256 hash function
+    async function sha256(text) {
+      const msgBuffer = new TextEncoder().encode(text);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      console.log('SHA-256 hash of "' + text + '": ' + hashHex);
+      return hashHex;
+    }
+
+    function normalizeEmail(email) {
+      return String(email || '').trim().toLowerCase();
+    }
+
+    function sanitizeHtml(text) {
+      const value = String(text || '').trim();
       if (!value) return '';
-      const cleaned = DOMPurify.sanitize(value, {
+      return DOMPurify.sanitize(value, {
         ALLOWED_TAGS: ['a', 'b', 'strong', 'em', 'i', 'u', 'p', 'br', 'ul', 'ol', 'li', 'span'],
         ALLOWED_ATTR: ['href', 'target', 'rel'],
         ALLOW_UNKNOWN_PROTOCOLS: false,
         FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'svg', 'math'],
         FORBID_ATTR: ['onerror', 'onload', 'onclick', 'style']
       });
-      return cleaned;
     }
-
-    async function sha256(value) {
-      const bytes = new TextEncoder().encode(value);
-      const digest = await crypto.subtle.digest('SHA-256', bytes);
-      return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
 
     async function loadWhitelist() {
       try {
+        console.log('Loading whitelist from:', REPO_BASE + 'data/whitelist.json');
         const response = await fetch(REPO_BASE + 'data/whitelist.json');
-        if (!response.ok) throw new Error('Failed to load whitelist');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const json = await response.json();
         state.admins = Array.isArray(json.admins) ? json.admins : [];
-        renderWhitelist();
+        console.log('Loaded ' + state.admins.length + ' admin entries');
         return state.admins;
       } catch (err) {
+        console.error('Failed to load whitelist:', err);
         state.loadError = 'Could not load whitelist.json: ' + err.message;
         showLoadError();
         throw err;
@@ -240,128 +222,85 @@
 
     async function loadAnnouncements() {
       try {
+        console.log('Loading announcements from:', REPO_BASE + 'data/announcements.json');
         const response = await fetch(REPO_BASE + 'data/announcements.json');
-        if (!response.ok) throw new Error('Failed to load announcements');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         const json = await response.json();
         state.announcements = Array.isArray(json.announcements) ? json.announcements : [];
+        console.log('Loaded ' + state.announcements.length + ' announcements');
         renderAnnouncements();
         return state.announcements;
       } catch (err) {
-        state.loadError = 'Could not load announcements.json: ' + err.message;
-        showLoadError();
-        throw err;
+        console.error('Failed to load announcements:', err);
+        return [];
       }
     }
 
     function showLoadError() {
-      const errorEl = document.getElementById('loadError');
+      const el = document.getElementById('loginError');
       if (state.loadError) {
-        errorEl.textContent = '⚠️ ' + state.loadError;
-        errorEl.classList.remove('hidden');
+        el.textContent = '⚠️ ' + state.loadError;
+        el.classList.remove('hidden');
       }
-    }
-
-    function getAdminByEmail(email) {
-      return state.admins.find(a => normalizeEmail(a.email) === normalizeEmail(email));
     }
 
     function isExpiredAdmin(admin) {
       if (!admin || !admin.expires_on) return true;
-      const date = new Date(admin.expires_on + 'T00:00:00Z');
-      return Number.isNaN(date.getTime()) || date <= new Date();
-    }
-
-    function renderWhitelist() {
-      const list = document.getElementById('whitelistList');
-      if (!state.admins.length) {
-        list.innerHTML = '<div class="admin-list-item"><strong>No admins</strong><small>No whitelist entries yet.</small></div>';
-        return;
-      }
-
-      list.innerHTML = state.admins.map(admin => `
-        <div class="admin-list-item">
-          <strong>${sanitizeHtml(admin.email || 'Unknown')}</strong>
-          <small>Role: ${sanitizeHtml(admin.role || 'admin')} • Expires: ${sanitizeHtml(admin.expires_on || 'not set')} • ${isExpiredAdmin(admin) ? 'EXPIRED' : 'ACTIVE'}</small>
-        </div>
-      `).join('');
-    }
-
-    function renderAnnouncements() {
-      const list = document.getElementById('announcementsList');
-      if (!state.announcements.length) {
-        list.innerHTML = '<p style="color: var(--muted); margin:0;">No announcements yet.</p>';
-        return;
-      }
-
-      list.innerHTML = state.announcements.map(item => `
-        <div class="announcement-item">
-          <h4>${sanitizeHtml(item.title || 'Untitled')}</h4>
-          <p>${sanitizeHtml(item.text || '')}</p>
-          <div class="announcement-dates">📅 From ${formatDate(item.start_date)} to ${formatDate(item.expiry_date)}</div>
-          <div class="announcement-actions">
-            <button class="btn btn-secondary" data-id="${item.id}" onclick="editAnnouncement(${item.id})">Edit</button>
-            <button class="btn btn-danger" data-id="${item.id}" onclick="deleteAnnouncement(${item.id})">Delete</button>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr + 'T00:00:00Z');
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    function validateAnnouncementInput(title, text, startDate, expiryDate) {
-      if (!text || text.length > MAX_ANNOUNCEMENT_TEXT_LENGTH) {
-        return 'Announcement text is required and must be under 500 characters.';
-      }
-      if (!startDate || !expiryDate) {
-        return 'Both start and expiry dates are required.';
-      }
-      const start = new Date(startDate + 'T00:00:00Z');
-      const end = new Date(expiryDate + 'T00:00:00Z');
-      if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-        return 'Please enter valid dates.';
-      }
-      if (start > end) {
-        return 'Start date must be before or equal to the expiry date.';
-      }
-      return null;
+      const expiryDate = new Date(admin.expires_on + 'T00:00:00Z');
+      const today = new Date();
+      today.setUTCHours(0, 0, 0, 0);
+      return expiryDate < today;
     }
 
     async function login() {
-      const email = normalizeEmail(document.getElementById('loginEmail').value);
-      const password = document.getElementById('loginPassword').value;
-      
-      if (!email || !password) {
+      const emailInput = normalizeEmail(document.getElementById('loginEmail').value);
+      const passwordInput = document.getElementById('loginPassword').value;
+
+      if (!emailInput || !passwordInput) {
         alert('Please enter both email and password.');
         return;
       }
 
-      const admin = getAdminByEmail(email);
+      console.log('Login attempt for:', emailInput);
+      const admin = state.admins.find(a => normalizeEmail(a.email) === emailInput);
 
       if (!admin) {
+        console.log('Admin not found in whitelist');
         alert('This email is not in the approved whitelist.');
         return;
       }
+
+      console.log('Admin found:', admin.email);
+      console.log('Admin expires on:', admin.expires_on);
+      console.log('Is expired?', isExpiredAdmin(admin));
+
       if (isExpiredAdmin(admin)) {
-        alert('This admin entry has expired and must be renewed before the next May 1 cycle.');
+        console.log('Admin entry is expired');
+        alert('This admin entry expired on ' + admin.expires_on + '. It must be renewed before May 1.');
         return;
       }
 
-      const submittedHash = await sha256(password);
+      const submittedHash = await sha256(passwordInput);
+      console.log('Submitted password hash:', submittedHash);
+      console.log('Stored password hash:', admin.password_hash);
+      console.log('Hashes match?', submittedHash === admin.password_hash);
+
       if (submittedHash !== admin.password_hash) {
-        alert('Incorrect password.');
+        console.log('Password hash mismatch');
+        alert('Incorrect password. Hashes do not match.');
         return;
       }
 
       state.currentUser = admin;
+      console.log('Login successful');
+      showDashboard();
+    }
+
+    function showDashboard() {
       document.getElementById('loginCard').classList.add('hidden');
       document.getElementById('dashboardCard').classList.remove('hidden');
-      document.getElementById('loginNotice').textContent = `Logged in as ${admin.email} • Expires ${admin.expires_on}`;
-      document.getElementById('whitelistPassword').value = '';
-      document.getElementById('newPassword').value = '';
-      document.getElementById('confirmPassword').value = '';
+      document.getElementById('loginNotice').textContent = 'Logged in as: ' + state.currentUser.email + ' • Expires: ' + state.currentUser.expires_on;
+      clearForm();
     }
 
     function logout() {
@@ -370,97 +309,8 @@
       document.getElementById('dashboardCard').classList.add('hidden');
       document.getElementById('loginEmail').value = '';
       document.getElementById('loginPassword').value = '';
-      document.getElementById('currentPassword').value = '';
-      document.getElementById('newPassword').value = '';
-      document.getElementById('confirmPassword').value = '';
-    }
-
-    async function changePassword() {
-      if (!state.currentUser) {
-        alert('Please log in first.');
-        return;
-      }
-
-      const currentPassword = document.getElementById('currentPassword').value;
-      const newPassword = document.getElementById('newPassword').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-
-      if (!currentPassword || !newPassword || !confirmPassword) {
-        alert('Current password, new password, and confirmation are required.');
-        return;
-      }
-      if (newPassword.length < 8) {
-        alert('New password must be at least 8 characters long.');
-        return;
-      }
-      if (newPassword !== confirmPassword) {
-        alert('New password and confirmation do not match.');
-        return;
-      }
-
-      const currentHash = await sha256(currentPassword);
-      if (currentHash !== state.currentUser.password_hash) {
-        alert('Current password is incorrect.');
-        return;
-      }
-
-      const index = state.admins.findIndex(a => normalizeEmail(a.email) === normalizeEmail(state.currentUser.email));
-      if (index >= 0) {
-        state.admins[index].password_hash = await sha256(newPassword);
-        state.admins[index].notes = 'Password updated by admin dashboard.';
-        state.whitelistDirty = true;
-        alert('Password updated. Download the whitelist.json file and commit it to GitHub.');
-        renderWhitelist();
-        document.getElementById('currentPassword').value = '';
-        document.getElementById('newPassword').value = '';
-        document.getElementById('confirmPassword').value = '';
-      }
-    }
-
-    async function addWhitelistUser() {
-      if (!state.currentUser) {
-        alert('Please log in first.');
-        return;
-      }
-
-      const email = normalizeEmail(document.getElementById('whitelistEmail').value);
-      const password = document.getElementById('whitelistPassword').value;
-      const expiry = document.getElementById('whitelistExpiry').value;
-
-      if (!email || !password || !expiry) {
-        alert('Email, password, and expiry are required.');
-        return;
-      }
-      if (state.admins.some(a => normalizeEmail(a.email) === email)) {
-        alert('This email already exists in the whitelist.');
-        return;
-      }
-
-      state.admins.push({
-        email,
-        password_hash: await sha256(password),
-        role: 'admin',
-        expires_on: expiry,
-        notes: 'Added from admin dashboard.'
-      });
-
-      state.whitelistDirty = true;
-      renderWhitelist();
-      document.getElementById('whitelistEmail').value = '';
-      document.getElementById('whitelistPassword').value = '';
-      document.getElementById('whitelistExpiry').value = '';
-      alert('Whitelist updated. Download the JSON file and commit it to GitHub.');
-    }
-
-    function downloadJson(filename, object) {
-      const blob = new Blob([JSON.stringify(object, null, 2) + '\n'], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(a.href);
+      document.getElementById('loginError').classList.add('hidden');
+      clearForm();
     }
 
     async function addAnnouncement() {
@@ -469,48 +319,68 @@
       const startDate = document.getElementById('startDate').value;
       const expiryDate = document.getElementById('expiryDate').value;
 
-      const error = validateAnnouncementInput(title, text, startDate, expiryDate);
-      if (error) {
-        alert(error);
+      if (!text || text.length > MAX_ANNOUNCEMENT_TEXT_LENGTH) {
+        alert('Announcement text is required and must be under 500 characters.');
+        return;
+      }
+      if (!startDate || !expiryDate) {
+        alert('Both start and expiry dates are required.');
         return;
       }
 
-      const nextId = state.announcements.reduce((max, item) => Math.max(max, Number(item.id) || 0), 0) + 1;
+      const start = new Date(startDate + 'T00:00:00Z');
+      const end = new Date(expiryDate + 'T00:00:00Z');
+      if (start > end) {
+        alert('Start date must be before or equal to the expiry date.');
+        return;
+      }
+
+      const nextId = state.announcements.reduce((max, a) => Math.max(max, Number(a.id) || 0), 0) + 1;
       state.announcements.push({
         id: nextId,
         title: title || 'Announcement',
         text: sanitizeHtml(text),
         start_date: startDate,
         expiry_date: expiryDate,
-        created_by_email: state.currentUser?.email || 'unknown@example.com',
+        created_by_email: state.currentUser.email,
         created_at: new Date().toISOString(),
         source: 'dashboard'
       });
 
       renderAnnouncements();
       clearForm();
-      alert('Announcement added to the local state. Download announcements.json and commit it to GitHub.');
+      alert('✓ Announcement added. Download announcements.json and commit to GitHub.');
     }
 
-    function editAnnouncement(id) {
-      const item = state.announcements.find(a => Number(a.id) === Number(id));
-      if (!item) {
-        alert('Announcement not found.');
+    function renderAnnouncements() {
+      const list = document.getElementById('announcementsList');
+      if (!state.announcements.length) {
+        list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:20px;">No announcements yet.</p>';
         return;
       }
-      document.getElementById('title').value = item.title || '';
-      document.getElementById('text').value = item.text || '';
-      document.getElementById('startDate').value = item.start_date || '';
-      document.getElementById('expiryDate').value = item.expiry_date || '';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      alert('Edit the values in the form and add it again to update. The new announcement will replace this one.');
+
+      list.innerHTML = state.announcements.map(a => `
+        <div class="announcement-item">
+          <h4>${sanitizeHtml(a.title || 'Untitled')}</h4>
+          <p>${sanitizeHtml(a.text || '')}</p>
+          <div class="announcement-dates">📅 ${formatDate(a.start_date)} → ${formatDate(a.expiry_date)}</div>
+          <div class="announcement-actions">
+            <button class="btn btn-secondary" onclick="deleteAnnouncement(${a.id})">Delete</button>
+          </div>
+        </div>
+      `).join('');
     }
 
     function deleteAnnouncement(id) {
       if (!confirm('Delete this announcement?')) return;
-      state.announcements = state.announcements.filter(a => Number(a.id) !== Number(id));
+      state.announcements = state.announcements.filter(a => a.id !== id);
       renderAnnouncements();
-      alert('Announcement removed from the local state. Download announcements.json and commit it to GitHub.');
+      alert('✓ Announcement removed. Download announcements.json and commit to GitHub.');
+    }
+
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00Z');
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
     function clearForm() {
@@ -518,24 +388,42 @@
       document.getElementById('text').value = '';
       document.getElementById('startDate').value = '';
       document.getElementById('expiryDate').value = '';
+      document.getElementById('charCount').textContent = '0';
     }
 
+    function downloadJson(filename, obj) {
+      const blob = new Blob([JSON.stringify(obj, null, 2) + '\n'], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    // Event listeners
     document.getElementById('y').textContent = new Date().getFullYear();
     document.getElementById('loginBtn').addEventListener('click', login);
-    document.getElementById('changePasswordBtn').addEventListener('click', changePassword);
-    document.getElementById('addWhitelistUserBtn').addEventListener('click', addWhitelistUser);
-    document.getElementById('addAnnouncementBtn').addEventListener('click', addAnnouncement);
     document.getElementById('logoutBtn').addEventListener('click', logout);
-    document.getElementById('downloadWhitelistBtn').addEventListener('click', () => {
-      downloadJson('whitelist.json', { admins: state.admins });
-    });
+    document.getElementById('addAnnouncementBtn').addEventListener('click', addAnnouncement);
     document.getElementById('downloadAnnouncementsBtn').addEventListener('click', () => {
       downloadJson('announcements.json', { announcements: state.announcements });
     });
 
-    // Load data on page init
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') login();
+    });
+
+    document.getElementById('text').addEventListener('input', (e) => {
+      document.getElementById('charCount').textContent = e.target.value.length;
+    });
+
+    // Initialize
+    console.log('Dashboard initializing...');
     Promise.all([loadWhitelist(), loadAnnouncements()]).catch(err => {
-      console.error('Initialization error:', err);
+      console.error('Init error:', err);
     });
   </script>
 </body>
