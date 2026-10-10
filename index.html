@@ -363,17 +363,17 @@
 
       const active = announcements.filter(a => {
         return a.start_date <= today && a.expiry_date >= today;
-      }).sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+      }).sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
 
       if (active.length === 0) {
-        container.innerHTML = '<div class=\"no-announcements\">No active announcements.</div>';
+        container.innerHTML = '<div class="no-announcements">No active announcements.</div>';
         return;
       }
 
       container.innerHTML = active.map(a => `
-        <div class=\"announcement\">
-          <div class=\"announcement-date\">Since ${formatDate(a.start_date)}</div>
-          <div class=\"announcement-text\">${a.text}</div>
+        <div class="announcement">
+          <div class="announcement-date">Since ${formatDate(a.start_date)}</div>
+          <div class="announcement-text">${a.text}</div>
         </div>
       `).join('');
     }
