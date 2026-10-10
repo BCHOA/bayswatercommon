@@ -5,14 +5,14 @@
       "password_hash": "addc4e7687eafc931f7581e3ed598029454f785d352eb01df3505e7189d1f6fd",
       "role": "admin",
       "expires_on": "2027-05-01",
-      "notes": "Admin password hash generated using the agreed password for the current period."
+      "notes": "Current admin password set for the current cycle."
     },
     {
       "email": "jimlenahan@aol.com",
       "password_hash": "addc4e7687eafc931f7581e3ed598029454f785d352eb01df3505e7189d1f6fd",
       "role": "admin",
       "expires_on": "2027-05-01",
-      "notes": "Admin password hash generated using the agreed password for the current period."
+      "notes": "Current admin password set for the current cycle."
     }
   ]
 }
