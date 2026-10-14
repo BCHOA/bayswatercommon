@@ -69,8 +69,8 @@ nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .card h2 { margin: 0 0 10px; font-size: 28px; letter-spacing: .2px; line-height: 1.2; }
 .card > p, .lead { margin: 0 0 18px; color: var(--muted); max-width: 62ch; font-size: 15.5px; }
 .card h3 { margin: 0 0 10px; font-size: 17px; letter-spacing: .2px; }
-.section-title { margin: 26px 0 10px; font-size: 18px; }
-.section-title:first-of-type { margin-top: 8px; }
+.section-title { margin: 36px 0 12px; padding-top: 26px; border-top: 1px solid var(--border); font-size: 18px; }
+.section-title:first-of-type { margin-top: 22px; padding-top: 0; border-top: 0; }
 .muted { color: var(--muted); }
 .small { font-size: 13.5px; }
 .pill {
