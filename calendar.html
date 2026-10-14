@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
   <title>Bayswater Common HOA — Calendar</title>
   <meta name="description" content="Bayswater Common HOA calendar of events and meeting dates." />
 
@@ -192,7 +195,7 @@
     <div class="topbar">
       <div class="brand">
        <img
-  src="/bayswatercommon/assets/logo.jpg"
+  src="assets/logo.jpg"
   alt="Bayswater Common logo"
   class="logo"
   aria-hidden="true"
@@ -258,8 +261,6 @@
     </div>
   </footer>
 
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-  </script>
+  <script src="js/site.js"></script>
 </body>
 </html>

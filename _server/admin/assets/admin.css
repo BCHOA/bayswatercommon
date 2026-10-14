@@ -1,0 +1,129 @@
+/* Bayswater Common HOA admin — matches the public site's navy / emerald / blue theme */
+:root {
+  --bg: #0b1220;
+  --card: #111a2e;
+  --text: #e8eefc;
+  --muted: #b8c2e0;
+  --brand: #34d399;
+  --brand2: #60a5fa;
+  --danger: #f87171;
+  --warn: #fbbf24;
+  --border: rgba(255, 255, 255, .12);
+  --field: rgba(255, 255, 255, .05);
+  --radius: 14px;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  background: radial-gradient(1000px 500px at 15% 0%, rgba(96, 165, 250, .18), transparent 60%), var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  font-size: 15px;
+}
+a { color: var(--brand2); }
+code { background: rgba(255, 255, 255, .08); padding: 1px 5px; border-radius: 5px; font-size: 13px; }
+.wrap { max-width: 1000px; margin: 0 auto; padding: 0 16px; }
+
+/* Header */
+.top { border-bottom: 1px solid var(--border); background: rgba(17, 26, 46, .7); }
+.top > .head { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 14px; padding-bottom: 14px; flex-wrap: wrap; }
+.brand strong { display: block; font-size: 17px; }
+.brand span { color: var(--muted); font-size: 13px; }
+.who { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 14px; }
+.who small { color: var(--muted); }
+.tabs { display: flex; gap: 4px; flex-wrap: wrap; padding-bottom: 0; }
+.tabs a { color: var(--muted); text-decoration: none; padding: 10px 14px; border-bottom: 3px solid transparent; font-weight: 600; font-size: 14px; }
+.tabs a:hover { color: var(--text); }
+.tabs a.on { color: var(--text); border-bottom-color: var(--brand); }
+
+main.wrap { padding-top: 24px; padding-bottom: 32px; }
+footer.wrap { padding-bottom: 32px; font-size: 13px; }
+h1 { font-size: 24px; margin: 0 0 12px; }
+h2 { font-size: 18px; margin: 0 0 10px; }
+h3 { font-size: 16px; margin: 6px 0; }
+.help { color: var(--muted); font-size: 13.5px; }
+.empty { color: var(--muted); padding: 24px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); }
+
+.card { background: rgba(17, 26, 46, .8); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; margin-bottom: 18px; }
+.card.narrow { max-width: 440px; margin: 24px auto; }
+.danger-zone { border-color: rgba(248, 113, 113, .35); }
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.bar h1 { margin: 0; }
+
+/* Forms */
+.field { display: block; margin-bottom: 16px; }
+.lbl { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.field .help { display: block; margin-top: 5px; }
+input[type=text], input[type=email], input[type=password], input[type=date], select, textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+select option { background: var(--card); }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--brand2); outline-offset: 1px; }
+input[type=date] { color-scheme: dark; }
+textarea { resize: vertical; min-height: 140px; }
+.check { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.row-form { display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; }
+.row-form .field { flex: 1 1 220px; margin-bottom: 0; }
+.buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+form.inline { display: inline; }
+
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: var(--brand);
+  color: #06111f;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn-quiet { background: transparent; color: var(--text); border-color: var(--border); }
+.btn-quiet:hover { background: rgba(255, 255, 255, .06); }
+.btn-danger { background: transparent; color: var(--danger); border-color: rgba(248, 113, 113, .5); }
+.btn-danger:hover { background: rgba(248, 113, 113, .12); }
+
+.flash { padding: 12px 14px; border-radius: 10px; margin-bottom: 16px; border: 1px solid; }
+.flash.ok { background: rgba(52, 211, 153, .12); border-color: rgba(52, 211, 153, .4); }
+.flash.error { background: rgba(248, 113, 113, .12); border-color: rgba(248, 113, 113, .45); }
+
+/* Announcements */
+.ann { background: rgba(17, 26, 46, .8); border: 1px solid var(--border); border-left: 4px solid var(--brand); border-radius: var(--radius); padding: 16px 18px; margin: 14px 0; }
+.ann.scheduled { border-left-color: var(--brand2); }
+.ann.expired { border-left-color: rgba(255, 255, 255, .2); opacity: .75; }
+.ann-head { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.dates { color: var(--muted); font-size: 13.5px; }
+.ann-body p { margin: 6px 0; }
+.ann-foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.ann-foot small { color: var(--muted); }
+.actions { display: inline-flex; gap: 8px; flex-wrap: wrap; }
+.preview { border: 1px dashed var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 16px; }
+
+.badge { display: inline-block; font-size: 12px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+.badge.active { background: rgba(52, 211, 153, .15); color: var(--brand); }
+.badge.scheduled { background: rgba(96, 165, 250, .15); color: var(--brand2); }
+.badge.expired { background: rgba(255, 255, 255, .08); color: var(--muted); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; background: rgba(255, 255, 255, .03); }
+tr:last-child td { border-bottom: 0; }
+td small { color: var(--muted); }
+
+@media (max-width: 600px) {
+  .row { grid-template-columns: 1fr; }
+  .card { padding: 16px; }
+}

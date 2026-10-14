@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
   <title>Bayswater Common HOA</title>
   <meta name="description" content="Bayswater Common HOA information: calendar, documents, and contact." />
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 
   <style>
     :root{
@@ -212,8 +214,15 @@
       font-weight:700;
       margin-bottom:6px;
     }
+    .announcement-title{
+      font-weight:700;
+      margin-bottom:4px;
+    }
     .announcement-text{
       color: var(--text);
+    }
+    .announcement-text p{
+      margin:0 0 6px;
     }
     .announcement-text a{
       color: var(--brand2);
@@ -262,7 +271,7 @@
     <div class="topbar">
       <div class="brand">
         <img
-          src="/bayswatercommon/assets/logo.jpg"
+          src="assets/logo.jpg"
           alt="Bayswater Common logo"
           class="logo"
           aria-hidden="true"
@@ -333,7 +342,7 @@
           <div class="no-announcements">No active announcements.</div>
         </div>
         <div class="admin-link">
-          <a href="admin/dashboard.html">Manage Announcements</a>
+          <a href="https://admin.bayswatercommon.org/">Board member sign-in</a>
         </div>
       </aside>
     </section>
@@ -345,65 +354,7 @@
     </div>
   </footer>
 
-  <script>
-    document.getElementById('y').textContent = new Date().getFullYear();
-
-    const MAX_ANNOUNCEMENT_TEXT_LENGTH = 500;
-
-    function sanitizeAnnouncementHtml(rawText) {
-      const safeText = String(rawText || '').trim();
-      if (!safeText) return '';
-
-      const clean = DOMPurify.sanitize(safeText, {
-        ALLOWED_TAGS: ['a', 'b', 'strong', 'em', 'i', 'u', 'p', 'br', 'ul', 'ol', 'li', 'span'],
-        ALLOWED_ATTR: ['href', 'target', 'rel'],
-        ALLOW_UNKNOWN_PROTOCOLS: false,
-        ADD_ATTR: ['target'],
-        FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'svg', 'math'],
-        FORBID_ATTR: ['onerror', 'onload', 'onclick', 'style']
-      });
-
-      return clean;
-    }
-
-    async function loadAnnouncements() {
-      try {
-        const response = await fetch('data/announcements.json');
-        const data = await response.json();
-        displayAnnouncements(data.announcements || []);
-      } catch (err) {
-        console.error('Failed to load announcements:', err);
-      }
-    }
-
-    function displayAnnouncements(announcements) {
-      const container = document.getElementById('announcementsList');
-      const today = new Date().toISOString().split('T')[0];
-
-      const active = announcements.filter(a => {
-        const text = String(a.text || '');
-        return a.start_date <= today && a.expiry_date >= today && text.length <= MAX_ANNOUNCEMENT_TEXT_LENGTH;
-      }).sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
-
-      if (active.length === 0) {
-        container.innerHTML = '<div class="no-announcements">No active announcements.</div>';
-        return;
-      }
-
-      container.innerHTML = active.map(a => `
-        <div class="announcement">
-          <div class="announcement-date">Since ${formatDate(a.start_date)}</div>
-          <div class="announcement-text">${sanitizeAnnouncementHtml(a.text)}</div>
-        </div>
-      `).join('');
-    }
-
-    function formatDate(dateStr) {
-      const date = new Date(dateStr + 'T00:00:00Z');
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    }
-
-    loadAnnouncements();
-  </script>
+  <script src="js/site.js"></script>
+  <script src="js/announcements.js"></script>
 </body>
 </html>
