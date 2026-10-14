@@ -502,8 +502,10 @@ function minutes_dir(): string
         http_response_code(500);
         exit('The uploads folder could not be created. Please contact the site administrator.');
     }
-    if (!is_file("$files/.htaccess")) {
-        @copy(__DIR__ . '/uploads.htaccess', "$files/.htaccess");
+    // Keep the folder's rules in step with inc/uploads.htaccess (re-copied whenever it changes).
+    $rules = __DIR__ . '/uploads.htaccess';
+    if (!is_file("$files/.htaccess") || md5_file("$files/.htaccess") !== md5_file($rules)) {
+        @copy($rules, "$files/.htaccess");
     }
     return $dir;
 }

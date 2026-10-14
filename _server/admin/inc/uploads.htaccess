@@ -13,4 +13,6 @@ RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .phar
 <IfModule mod_headers.c>
   Header set X-Content-Type-Options "nosniff"
   Header set Content-Security-Policy "default-src 'none'; sandbox"
+  # Don't let Cloudflare (or browsers) keep copies, so a file deleted in the dashboard is gone at once.
+  Header set Cache-Control "no-cache, private"
 </IfModule>

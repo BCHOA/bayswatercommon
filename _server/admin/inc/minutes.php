@@ -19,6 +19,7 @@ function item_list_html(array $m, bool $withRemove): string
 
 function page_minutes(array $me): void
 {
+    minutes_dir();   // also refreshes the uploads folder's .htaccess after an update
     $rows = '';
     foreach (meetings_all() as $m) {
         $items = item_list_html($m, false);
