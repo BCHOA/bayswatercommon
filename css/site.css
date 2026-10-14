@@ -199,3 +199,11 @@ footer { padding: 26px 18px 36px; color: var(--muted); text-align: center; font-
   .officers-table td[data-label]::before { content: attr(data-label) ": "; color: var(--muted); font-weight: 600; font-size: 12.5px; }
   .officers-table td:first-child { font-size: 15px; }
 }
+
+/* Common Requests (prefilled emails) */
+.requests { list-style: none; margin: 6px 0 10px; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.requests li { padding: 14px; border-radius: 14px; border: 1px solid var(--border); background: rgba(255, 255, 255, .03); display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+.requests b { color: var(--text); font-size: 15px; }
+.requests span { color: var(--muted); font-size: 14px; flex: 1; }
+.requests .doclink { margin-top: 4px; }
+@media (max-width: 560px) { .requests { grid-template-columns: 1fr; } }
