@@ -475,3 +475,85 @@ function format_announcement(string $text): string
 
     return preg_replace_callback('/\x01(\d+)\x02/', fn($m) => $tokens[(int)$m[1]], $s) ?? $s;
 }
+
+// ---------- Meeting minutes ----------
+
+const MIN_DEFAULT = ['next_id' => 1, 'next_item' => 1, 'meetings' => []];
+
+// Allowed upload types, and how each is shown on the public site.
+const MINUTES_EXT = [
+    'pdf' => 'pdf',
+    'mp3' => 'audio', 'm4a' => 'audio', 'wav' => 'audio', 'ogg' => 'audio', 'aac' => 'audio',
+    'doc' => 'document', 'docx' => 'document', 'txt' => 'document', 'vtt' => 'transcript',
+];
+
+/** Public address of this admin site, used to build file links (not taken from the request). */
+function site_url(): string
+{
+    return rtrim(getenv('BCHOA_SITE_URL') ?: 'https://admin.bayswatercommon.org', '/');
+}
+
+/** Folder for uploaded minutes files (public, but code can never run there). */
+function minutes_dir(): string
+{
+    $files = dirname(__DIR__) . '/files';
+    $dir = $files . '/minutes';
+    if (!is_dir($dir) && !@mkdir($dir, 0755, true)) {
+        http_response_code(500);
+        exit('The uploads folder could not be created. Please contact the site administrator.');
+    }
+    if (!is_file("$files/.htaccess")) {
+        @copy(__DIR__ . '/uploads.htaccess', "$files/.htaccess");
+    }
+    return $dir;
+}
+
+function meetings_all(): array
+{
+    $list = store_read('minutes', MIN_DEFAULT)['meetings'];
+    usort($list, fn($a, $b) => [$b['date'], $b['id']] <=> [$a['date'], $a['id']]);
+    return $list;
+}
+
+function meeting_by_id(int $id): ?array
+{
+    foreach (store_read('minutes', MIN_DEFAULT)['meetings'] as $m) {
+        if ($m['id'] === $id) {
+            return $m;
+        }
+    }
+    return null;
+}
+
+function item_url(array $it): string
+{
+    return $it['file'] !== '' ? site_url() . '/files/minutes/' . rawurlencode($it['file']) : $it['url'];
+}
+
+function human_size(int $bytes): string
+{
+    return $bytes >= 1048576 ? sprintf('%.1f MB', $bytes / 1048576) : max(1, (int)round($bytes / 1024)) . ' KB';
+}
+
+/** Largest upload PHP will accept, in bytes. */
+function upload_limit(): int
+{
+    $toBytes = function (string $v): int {
+        $v = trim($v);
+        $n = (int)$v;
+        switch (strtolower(substr($v, -1))) {
+            case 'g': return $n * 1073741824;
+            case 'm': return $n * 1048576;
+            case 'k': return $n * 1024;
+        }
+        return $n;
+    };
+    return min($toBytes((string)ini_get('upload_max_filesize')), $toBytes((string)ini_get('post_max_size')));
+}
+
+/** May this website origin read the public JSON feeds? (BCHOA_TEST_ORIGIN adds one for local testing.) */
+function origin_allowed(string $origin): bool
+{
+    return in_array($origin, PUBLIC_ORIGINS, true)
+        || ($origin !== '' && $origin === getenv('BCHOA_TEST_ORIGIN'));
+}

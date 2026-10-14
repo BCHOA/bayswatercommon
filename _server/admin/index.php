@@ -11,12 +11,17 @@ declare(strict_types=1);
 const BCHOA = true;
 require __DIR__ . '/inc/lib.php';
 require __DIR__ . '/inc/view.php';
+require __DIR__ . '/inc/minutes.php';
 
 $p      = (string)($_GET['p'] ?? '');
 $isPost = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
 
 if ($isPost && !csrf_ok()) {
-    flash('error', 'Your session expired. Please try again.');
+    // An upload bigger than post_max_size makes PHP drop the whole form, token included.
+    $tooBig = !$_POST && (int)($_SERVER['CONTENT_LENGTH'] ?? 0) > 0;
+    flash('error', $tooBig
+        ? 'That file is larger than ' . human_size(upload_limit()) . '. Put it on Google Drive or similar and add it as a link instead.'
+        : 'Your session expired. Please try again.');
     redirect($p === 'login' || $p === 'setup' ? '' : 'p=' . rawurlencode($p));
 }
 
@@ -53,6 +58,13 @@ if (in_array($p, $adminOnly, true) && !is_admin($me)) {
 
 switch ($p) {
     case 'password':    page_password($me, $isPost, false);
+    case 'minutes':     page_minutes($me);
+    case 'min_edit':    page_min_edit($me);
+    case 'min_save':    $isPost ? action_min_save($me) : redirect('p=minutes');
+    case 'min_delete':  $isPost ? action_min_delete($me) : redirect('p=minutes');
+    case 'min_upload':  $isPost ? action_min_upload($me) : redirect('p=minutes');
+    case 'min_link':    $isPost ? action_min_link($me) : redirect('p=minutes');
+    case 'min_item_delete': $isPost ? action_min_item_delete($me) : redirect('p=minutes');
     case 'ann_edit':    page_ann_edit($me);
     case 'ann_save':    $isPost ? action_ann_save($me) : redirect();
     case 'ann_delete':  $isPost ? action_ann_delete($me) : redirect();
@@ -363,7 +375,7 @@ function page_users(array $me): void
                . '<td class="actions"><a class="btn btn-quiet" href="?p=user_edit&amp;id=' . $u['id'] . '">Edit</a></td></tr>';
     }
     $body = '<div class="bar"><h1>Users</h1><a class="btn" href="?p=user_edit">+ Add user</a></div>'
-          . '<p class="help"><strong>Editors</strong> manage announcements and their own password. <strong>Admins</strong> can also add and remove users and reset passwords.</p>'
+          . '<p class="help"><strong>Editors</strong> manage announcements, meeting minutes and their own password. <strong>Admins</strong> can also add and remove users and reset passwords.</p>'
           . '<div class="table-wrap"><table><thead><tr><th>Name</th><th>Role</th><th>Status</th><th>Access ends</th><th>Last sign-in</th><th></th></tr></thead><tbody>'
           . $rows . '</tbody></table></div>';
     render('Users', $body, $me, 'users');
@@ -380,8 +392,8 @@ function page_user_edit(array $me, ?array $form = null, string $error = ''): voi
     $v = $form ?? ($u ?? ['email' => '', 'name' => '', 'role' => 'editor', 'active' => true, 'expires_on' => '']);
     $self = $u && $u['id'] === $me['id'];
     $roleSel = '<select name="role"' . ($self ? ' disabled' : '') . '>'
-             . '<option value="editor"' . ($v['role'] === 'editor' ? ' selected' : '') . '>Editor (announcements)</option>'
-             . '<option value="admin"' . ($v['role'] === 'admin' ? ' selected' : '') . '>Admin (announcements + users)</option></select>';
+             . '<option value="editor"' . ($v['role'] === 'editor' ? ' selected' : '') . '>Editor (announcements, minutes)</option>'
+             . '<option value="admin"' . ($v['role'] === 'admin' ? ' selected' : '') . '>Admin (everything, plus users)</option></select>';
     $nextMay = date('Y') . '-05-01' > today() ? date('Y') . '-05-01' : (date('Y') + 1) . '-05-01';
 
     $body = '<section class="card"><h1>' . ($u ? 'Edit user' : 'Add user') . '</h1>'

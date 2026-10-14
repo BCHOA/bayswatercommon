@@ -11,7 +11,7 @@ const BCHOA = true;
 require dirname(__DIR__) . '/inc/lib.php';
 
 $origin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
-if (in_array($origin, PUBLIC_ORIGINS, true)) {
+if (origin_allowed($origin)) {
     header("Access-Control-Allow-Origin: $origin");
     header('Vary: Origin');
 }

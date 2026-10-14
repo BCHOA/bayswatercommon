@@ -1,214 +1,28 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; media-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Calendar | Bayswater Common HOA</title>
+  <meta name="description" content="Bayswater Common HOA calendar: meeting dates, events, pavilion reservations and announcements.">
   <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
-  <title>Bayswater Common HOA — Calendar</title>
-  <meta name="description" content="Bayswater Common HOA calendar of events and meeting dates." />
-
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --text:#e8eefc;
-      --muted:#b8c2e0;
-      --brand:#34d399;
-      --brand2:#60a5fa;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(96,165,250,.25), transparent 55%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(52,211,153,.20), transparent 60%),
-                  var(--bg);
-      color: var(--text);
-      line-height:1.5;
-    }
-    a{color: inherit; text-decoration:none}
-    header{
-      padding: 28px 18px 8px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 16px;
-      padding: 14px 16px;
-      border:1px solid var(--border);
-      background: rgba(17,26,46,.55);
-      backdrop-filter: blur(8px);
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-    }
-    /* Match header/logo styling used on the home page */
-    .brand{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .logo{
-      width: 20vw;        /* ~20% of viewport width */
-      max-width: 260px;  /* prevents it getting huge */
-      min-width: 140px;  /* keeps it readable */
-      height: auto;      /* keep aspect ratio */
-      border-radius: 24px;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 8px auto; /* spacing below */
-    }
-
-    .brand h1{
-      margin:0;
-      font-size: 14.5px;
-      letter-spacing:.3px;
-      font-weight:800;
-    }
-    .brand p{
-      margin:0;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-    nav{
-      display:flex;
-      gap: 8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .navlink{
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      color: var(--muted);
-      font-weight:650;
-      font-size: 13.5px;
-    }
-    .navlink:hover{
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-    .container{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px;
-    }
-    .card{
-      background: rgba(17,26,46,.68);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(96,165,250,.10);
-      border: 1px solid rgba(96,165,250,.25);
-      color: #dbeafe;
-      font-weight:700;
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-    .hero{
-      margin-top: 18px;
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 16px;
-      align-items:stretch;
-    }
-    @media (max-width: 900px){
-      .hero{grid-template-columns:1fr}
-      .topbar{border-radius: 20px}
-      .brand{min-width:auto}
-    }
-    .hero h2{
-      margin: 0 0 10px;
-      font-size: 28px;
-      letter-spacing: .2px;
-    }
-    .hero p{
-      margin:0 0 18px;
-      color: var(--muted);
-      max-width: 60ch;
-      font-size: 15.5px;
-    }
-    .list{
-      margin: 10px 0 0;
-      padding: 0;
-      list-style:none;
-      display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .list li{
-      padding: 12px 12px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,.03);
-      color: var(--muted);
-      font-size: 13.5px;
-    }
-    .list b{ color: var(--text); }
-    .calendar-wrap{
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: rgba(0,0,0,.08);
-    }
-    .calendar-wrap iframe{
-      width:100%;
-      height: 640px;
-      border:0;
-    }
-    footer{
-      padding: 26px 18px 36px;
-      color: var(--muted);
-      text-align:center;
-      font-size: 13px;
-    }
-    .footerline{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-  </style>
+  <link rel="stylesheet" href="css/site.css?v=1">
 </head>
-
 <body>
   <header>
     <div class="topbar">
-      <div class="brand">
-       <img
-  src="assets/logo.jpg"
-  alt="Bayswater Common logo"
-  class="logo"
-  aria-hidden="true"
-/>
+      <a class="brand" href="index.html">
+        <img src="assets/logo.jpg" alt="" class="logo" width="394" height="127">
         <div>
           <h1>Bayswater Common HOA</h1>
-          <p>Calendar • Documents • Contact</p>
+          <p>Suwanee, Georgia</p>
         </div>
-      </div>
-
+      </a>
       <nav aria-label="Primary">
         <a class="navlink" href="index.html">Home</a>
-        <a class="navlink" href="calendar.html">Calendar</a>
+        <a class="navlink" href="calendar.html" aria-current="page">Calendar</a>
         <a class="navlink" href="documents.html">HOA Documents</a>
         <a class="navlink" href="contact.html">Contact</a>
       </nav>
@@ -216,51 +30,35 @@
   </header>
 
   <main class="container">
-    <section class="hero">
+    <section class="hero wide-main">
       <div class="card">
         <div class="pill">🗓️ HOA Calendar</div>
-        <h2>Meeting dates & announcements</h2>
-        <p>
-          This calendar lists HOA meetings and key dates for residents.
-          If you don’t see updates right away, refresh—embeds can take a moment to load.
-        </p>
-
+        <h2>Meeting dates &amp; announcements</h2>
+        <p>Contact a <a class="text-link" href="contact.html">board member</a> if you have questions, or would like to post to the Bayswater Calendar.</p>
         <div class="calendar-wrap">
-          <!-- Embedded Google Calendar (month view, nav visible) -->
-          <iframe
-            title="Bayswater Common HOA Calendar"
-            src="https://calendar.google.com/calendar/embed?src=b8aed431852b1d617f9ed0cba642cc9ac6ceadeccc63cb632f44943e90e2362f%40group.calendar.google.com&ctz=America%2FNew_York&mode=MONTH&showNav=1&showDate=1"
-            scrolling="no">
-          </iframe>
+          <iframe id="hoaCalendar" title="Bayswater Common HOA calendar"
+            src="https://calendar.google.com/calendar/embed?src=b8aed431852b1d617f9ed0cba642cc9ac6ceadeccc63cb632f44943e90e2362f%40group.calendar.google.com&amp;ctz=America%2FNew_York&amp;mode=MONTH&amp;showNav=1&amp;showDate=1"
+            loading="lazy"></iframe>
         </div>
-
-        <p style="margin-top:14px; color: var(--muted); font-size: 13.5px;">
-          Tip: If you’d like residents to subscribe via Google Calendar, share the calendar link in addition to the embed.
-        </p>
       </div>
 
-      <aside class="card side">
-        <h3 style="margin:0 0 10px; font-size:16px; letter-spacing:.2px;">What to expect</h3>
-        <ul class="list">
-          <li><b>Monthly / quarterly meetings:</b> dates and times will appear in the calendar.</li>
-          <li><b>Agenda items:</b> posted when available (as event descriptions or attached links).</li>
-          <li><b>Changes:</b> if dates shift, you’ll see updated entries here.</li>
-          <li><b>Timezone:</b> Eastern Time (America/New_York).</li>
-        </ul>
-        <div style="height:14px"></div>
-        <p style="margin:0; color: var(--muted); font-size: 13.5px;">
-          If anything doesn’t load, give GitHub Pages 1–3 minutes and refresh.
-        </p>
+      <aside class="card" id="announcements">
+        <h3>📢 Announcements</h3>
+        <div class="announcements-box tall" id="announcementsList" tabindex="0" aria-label="Announcements">
+          <div class="no-announcements">Loading announcements…</div>
+        </div>
+        <div class="admin-link">
+          <a href="https://admin.bayswatercommon.org/">Board member sign-in</a>
+        </div>
       </aside>
     </section>
   </main>
 
   <footer>
-    <div class="footerline">
-      © <span id="y"></span> Bayswater Common HOA • Built with static HTML on GitHub Pages
-    </div>
+    <div class="footerline">© <span id="y"></span> Bayswater Common HOA</div>
   </footer>
 
-  <script src="js/site.js"></script>
+  <script src="js/site.js?v=1"></script>
+  <script src="js/announcements.js?v=1"></script>
 </body>
 </html>

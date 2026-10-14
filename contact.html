@@ -1,292 +1,100 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src https://admin.bayswatercommon.org; media-src https://admin.bayswatercommon.org; frame-src https://calendar.google.com; form-action 'none'; base-uri 'self'; object-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>Contact | Bayswater Common HOA</title>
+  <meta name="description" content="Contact the Bayswater Common HOA board, ARC, and local Suwanee and Gwinnett services.">
   <link rel="icon" href="assets/logo.jpg" type="image/jpeg">
-  <title>Bayswater Common HOA — Contact</title>
-  <meta name="description" content="Contact the Bayswater Common HOA board with helpful email options." />
-
-  <style>
-    :root{
-      --bg:#0b1220;
-      --card:#111a2e;
-      --text:#e8eefc;
-      --muted:#b8c2e0;
-      --brand:#34d399;
-      --brand2:#60a5fa;
-      --border:rgba(255,255,255,.10);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
-      background: radial-gradient(1200px 600px at 20% 10%, rgba(96,165,250,.25), transparent 55%),
-                  radial-gradient(900px 500px at 80% 20%, rgba(52,211,153,.20), transparent 60%),
-                  var(--bg);
-      color: var(--text);
-      line-height:1.5;
-    }
-    a{color: inherit; text-decoration:none}
-    header{
-      padding: 28px 18px 8px;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 16px;
-      padding: 14px 16px;
-      border:1px solid var(--border);
-      background: rgba(17,26,46,.55);
-      backdrop-filter: blur(8px);
-      border-radius: 999px;
-      box-shadow: var(--shadow);
-    }
-
-    /* Match header/logo styling used on the home page */
-    .brand{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .logo{
-      width: 20vw;        /* ~20% of viewport width */
-      max-width: 260px;  /* prevents it getting huge */
-      min-width: 140px;  /* keeps it readable */
-      height: auto;      /* keep aspect ratio */
-      border-radius: 24px;
-      object-fit: cover;
-      display: block;
-      margin: 0 auto 8px auto; /* spacing below */
-    }
-
-    .brand h1{
-      margin:0;
-      font-size: 14.5px;
-      letter-spacing:.3px;
-      font-weight:800;
-    }
-    .brand p{
-      margin:0;
-      font-size: 12.5px;
-      color: var(--muted);
-    }
-    nav{
-      display:flex;
-      gap: 8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-    .navlink{
-      padding: 10px 12px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      color: var(--muted);
-      font-weight:650;
-      font-size: 13.5px;
-    }
-    .navlink:hover{
-      border-color: rgba(255,255,255,.14);
-      background: rgba(255,255,255,.04);
-      color: var(--text);
-    }
-    .container{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px;
-    }
-    .hero{
-      margin-top: 18px;
-    }
-    @media (max-width: 900px){
-      .topbar{border-radius: 20px}
-      .brand{min-width:auto}
-    }
-
-    /* Mobile-specific adjustments for small screens */
-    @media (max-width: 520px) {
-      .logo{
-        width: 36vw;
-        max-width: 180px;
-        min-width: 100px;
-      }
-      .topbar{
-        padding: 12px 12px;
-      }
-      .card{
-        max-width: 100%;
-        padding-left: 14px;
-        padding-right: 14px;
-        border-radius: 12px;
-      }
-      .officers-table th, .officers-table td{
-        padding: 8px 8px;
-        font-size: 13px;
-      }
-      /* Allow phone numbers to wrap on narrow devices to avoid horizontal overflow */
-      .officers-table td .phone{ white-space: normal; }
-      .hero p{ max-width: 100%; }
-    }
-
-    .card{
-      background: rgba(17,26,46,.68);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 22px;
-      max-width: 900px; /* widened so phone numbers don't wrap on larger screens */
-      margin: 0 auto;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 999px;
-      background: rgba(52,211,153,.10);
-      border: 1px solid rgba(52,211,153,.25);
-      color: #bbf7d0;
-      font-weight:700;
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-    .hero h2{
-      margin: 0 0 10px;
-      font-size: 28px;
-      letter-spacing: .2px;
-    }
-    .hero p{
-      margin:0 0 18px;
-      color: var(--muted);
-      max-width: 60ch;
-      font-size: 15.5px;
-    }
-
-    /* Officers table styling */
-    .officers-table{ width:100%; border-collapse:collapse; margin-top:16px; }
-    .officers-table th, .officers-table td{ text-align:left; padding:12px; border-bottom: 1px solid rgba(255,255,255,.04); font-size:14px; color:var(--muted); }
-    .officers-table th{ color:var(--text); font-weight:700; font-size:13.5px; }
-    .officers-table td .email-link{ color:var(--brand2); font-weight:700; text-decoration:none }
-    .officers-table td .phone{ color:var(--muted); white-space:nowrap; }
-
-    footer{
-      padding: 26px 18px 36px;
-      color: var(--muted);
-      text-align:center;
-      font-size: 13px;
-    }
-    .footerline{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding-top: 18px;
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-    code{background: rgba(255,255,255,.05); padding:2px 6px; border-radius: 8px;}
-  </style>
+  <link rel="stylesheet" href="css/site.css?v=1">
 </head>
-
 <body>
   <header>
     <div class="topbar">
-      <div class="brand">
-       <img
-  src="assets/logo.jpg"
-  alt="Bayswater Common logo"
-  class="logo"
-  aria-hidden="true"
-/>
+      <a class="brand" href="index.html">
+        <img src="assets/logo.jpg" alt="" class="logo" width="394" height="127">
         <div>
           <h1>Bayswater Common HOA</h1>
-          <p>Calendar • Documents • Contact</p>
+          <p>Suwanee, Georgia</p>
         </div>
-      </div>
-
+      </a>
       <nav aria-label="Primary">
         <a class="navlink" href="index.html">Home</a>
         <a class="navlink" href="calendar.html">Calendar</a>
         <a class="navlink" href="documents.html">HOA Documents</a>
-        <a class="navlink" href="contact.html">Contact</a>
+        <a class="navlink" href="contact.html" aria-current="page">Contact</a>
       </nav>
     </div>
   </header>
 
   <main class="container">
-    <section class="hero">
-      <div class="card">
-        <div class="pill">✉️ Contact</div>
-        <h2>Reach the HOA board</h2>
-        <p>
-          For specific officers below, use the phone or email links. You can also email the board generally at
-          <a href="mailto:HOABoard@BayswaterCommon.org" style="font-weight:900;">HOABoard@BayswaterCommon.org</a>
-        </p>
+    <section class="card">
+      <div class="pill">✉️ Contact</div>
+      <h2>Community and local contact information</h2>
 
-        <!-- Officers table -->
-        <h3 style="margin-top:18px; margin-bottom:8px;">HOA Officers</h3>
-        <table class="officers-table" aria-label="HOA officers contact list">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Position</th>
-              <th>Phone</th>
-              <th>Email</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Jonathan Underwood</td>
-              <td>President</td>
-              <td><a class="phone" href="tel:+14705339501" aria-label="Call Jonathan Underwood">(470) 533-9501</a></td>
-              <td><a class="email-link" href="mailto:president@bayswatercommon.org">president@bayswatercommon.org</a></td>
-            </tr>
-            <tr>
-              <td>Christian Ghetie</td>
-              <td>Vice President</td>
-              <td>—</td>
-              <td><a class="email-link" href="mailto:vicepresident@bayswatercommon.org">vicepresident@bayswatercommon.org</a></td>
-            </tr>
-            <tr>
-              <td>Andrew Marginean</td>
-              <td>Secretary</td>
-              <td><a class="phone" href="tel:+14046435588" aria-label="Call Andrew Marginean">(404) 643-5588</a></td>
-              <td><a class="email-link" href="mailto:secretary@bayswatercommon.org">secretary@bayswatercommon.org</a></td>
-            </tr>
-            <tr>
-              <td>Jim Lenahan</td>
-              <td>Treasurer</td>
-              <td><a class="phone" href="tel:+14043142207" aria-label="Call Jim Lenahan">(404) 314-2207</a></td>
-              <td><a class="email-link" href="mailto:treasurer@bayswatercommon.org">treasurer@bayswatercommon.org</a></td>
-            </tr>
-            <tr>
-              <td>Tom Ford</td>
-              <td>Member At Large</td>
-              <td>—</td>
-              <td><a class="email-link" href="mailto:memberatlarge@bayswatercommon.org">memberatlarge@bayswatercommon.org</a></td>
-            </tr>
-          </tbody>
-        </table>
+      <h3 class="section-title">Common Requests</h3>
+      <div class="placeholder">Ready-made emails for common requests are coming soon. Until then, email the board at <a class="text-link" href="mailto:HOABoard@BayswaterCommon.org">HOABoard@BayswaterCommon.org</a>.</div>
 
-        <p style="margin-top:14px; color: var(--muted); font-size: 13.5px;">
-          Please include your unit/address and a short description. If photos are needed, email them in a follow-up.
-        </p>
-      </div>
+      <h3 class="section-title">HOA Officers</h3>
+      <p class="muted small">Email the whole board at <a class="text-link" href="mailto:HOABoard@BayswaterCommon.org">HOABoard@BayswaterCommon.org</a>, or contact an officer directly. Please include your address and a short description.</p>
+      <table class="officers-table" aria-label="HOA officers contact list">
+        <thead>
+          <tr><th>Name</th><th>Position</th><th>Phone</th><th>Email</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jonathan Underwood</td>
+            <td data-label="Position">President</td>
+            <td data-label="Phone"><a class="phone" href="tel:+14705339501">(470) 533-9501</a></td>
+            <td data-label="Email"><a href="mailto:president@bayswatercommon.org">president@bayswatercommon.org</a></td>
+          </tr>
+          <tr>
+            <td>Christian Ghetie</td>
+            <td data-label="Position">Vice President</td>
+            <td data-label="Phone">—</td>
+            <td data-label="Email"><a href="mailto:vicepresident@bayswatercommon.org">vicepresident@bayswatercommon.org</a></td>
+          </tr>
+          <tr>
+            <td>Andrew Marginean</td>
+            <td data-label="Position">Secretary</td>
+            <td data-label="Phone"><a class="phone" href="tel:+14046435588">(404) 643-5588</a></td>
+            <td data-label="Email"><a href="mailto:secretary@bayswatercommon.org">secretary@bayswatercommon.org</a></td>
+          </tr>
+          <tr>
+            <td>Jim Lenahan</td>
+            <td data-label="Position">Treasurer</td>
+            <td data-label="Phone"><a class="phone" href="tel:+14043142207">(404) 314-2207</a></td>
+            <td data-label="Email"><a href="mailto:treasurer@bayswatercommon.org">treasurer@bayswatercommon.org</a></td>
+          </tr>
+          <tr>
+            <td>Tom Ford</td>
+            <td data-label="Position">ARC / Member At Large</td>
+            <td data-label="Phone">—</td>
+            <td data-label="Email"><a href="mailto:memberatlarge@bayswatercommon.org">memberatlarge@bayswatercommon.org</a></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 class="section-title">Other Important Numbers</h3>
+      <ul class="contact-list">
+        <li><b>Emergency (police, fire, medical)</b><a href="tel:911">911</a></li>
+        <li><b>Suwanee Police (non-emergency)</b><a href="tel:+17709458995">(770) 945-8995</a><br>373 Buford Highway, Suwanee<br><a href="https://www.suwanee.com/services/police" target="_blank" rel="noopener">Police department website</a></li>
+        <li><b>Suwanee City Hall</b><a href="tel:+17709458996">(770) 945-8996</a><br>330 Town Center Avenue, Suwanee</li>
+        <li><b>Suwanee City Council</b><a href="https://www.suwanee.com/government/city-council" target="_blank" rel="noopener">Mayor and Council members</a><br>Or call City Hall at (770) 945-8996</li>
+        <li><b>Suwanee events calendar</b><a href="https://www.suwanee.com/explore-suwanee/calendar-of-events" target="_blank" rel="noopener">Calendar of events</a><br>Farmers Market, festivals, concerts and more</li>
+        <li><b>Vacation house checks (Suwanee PD)</b><a href="mailto:housecheck@suwanee.com">housecheck@suwanee.com</a><br>Request at least 48 hours before you leave</li>
+        <li><b>Gwinnett water &amp; sewer</b>Customer care <a href="tel:+16783766800">(678) 376-6800</a><br>24/7 water emergencies <a href="tel:+16783767000">(678) 376-7000</a></li>
+        <li><b>Gwinnett Animal Welfare</b><a href="tel:+17703393200">(770) 339-3200</a><br>Strays, injured or dangerous animals</li>
+        <li><b>Georgia 811 (call before you dig)</b><a href="tel:811">811</a></li>
+      </ul>
     </section>
   </main>
 
   <footer>
-    <div class="footerline">
-      © <span id="y"></span> Bayswater Common HOA • Built with static HTML on GitHub Pages
-    </div>
+    <div class="footerline">© <span id="y"></span> Bayswater Common HOA</div>
   </footer>
-
-  <script src="js/site.js"></script>
+  <script src="js/site.js?v=1"></script>
 </body>
 </html>
