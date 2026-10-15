@@ -12,6 +12,11 @@ const BCHOA = true;
 require __DIR__ . '/inc/lib.php';
 require __DIR__ . '/inc/view.php';
 require __DIR__ . '/inc/minutes.php';
+require __DIR__ . '/inc/settings.php';
+require __DIR__ . '/inc/mailer.php';
+require __DIR__ . '/inc/gcal.php';
+require __DIR__ . '/inc/inbound.php';
+require __DIR__ . '/inc/settings-page.php';
 
 $p      = (string)($_GET['p'] ?? '');
 $isPost = ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST';
@@ -50,7 +55,7 @@ if (!empty($me['must_change'])) {
     page_password($me, $isPost, true);
 }
 
-$adminOnly = ['users', 'user_edit', 'user_save', 'user_reset', 'user_delete', 'activity'];
+$adminOnly = ['users', 'user_edit', 'user_save', 'user_reset', 'user_delete', 'activity', 'settings', 'settings_save', 'settings_test', 'news_run'];
 if (in_array($p, $adminOnly, true) && !is_admin($me)) {
     flash('error', 'Only admins can do that.');
     redirect();
@@ -74,6 +79,10 @@ switch ($p) {
     case 'user_reset':  $isPost ? action_user_reset($me) : redirect('p=users');
     case 'user_delete': $isPost ? action_user_delete($me) : redirect('p=users');
     case 'activity':    page_activity($me);
+    case 'settings':    page_settings($me);
+    case 'settings_save': $isPost ? action_settings_save($me) : redirect('p=settings');
+    case 'settings_test': $isPost ? action_settings_test($me) : redirect('p=settings');
+    case 'news_run':    $isPost ? action_news_run($me) : redirect('p=settings');
     default:            page_announcements($me);
 }
 
@@ -224,7 +233,7 @@ function page_announcements(array $me): void
         $rows = '<p class="empty">No announcements yet.</p>';
     }
     $body = '<div class="bar"><h1>Announcements</h1><a class="btn" href="?p=ann_edit">+ New announcement</a></div>'
-          . '<p class="help">Announcements show on the public home page from their start date through their end date.</p>'
+          . '<p class="help">Announcements show on the public home page and the calendar page from their start date through their end date. You can also post by email: send it to <strong>' . h(settings()['mailbox']) . '</strong> with the title as the subject (optional first lines <code>Start: 5/23/2026</code> and <code>End: 6/6/2026</code>).</p>'
           . $rows;
     render('Announcements', $body, $me, 'announcements');
 }
