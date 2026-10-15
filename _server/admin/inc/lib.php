@@ -12,6 +12,9 @@ defined('BCHOA') or exit;
 
 ini_set('display_errors', '0');
 date_default_timezone_set('America/New_York');
+if (PHP_SAPI !== 'cli') {
+    header_remove('X-Powered-By');   // don't advertise the PHP version
+}
 
 const APP_NAME       = 'Bayswater Common HOA';
 const MIN_PASSWORD   = 10;
@@ -68,9 +71,48 @@ function clean_text(string $s, int $max): string
     return mb_substr(trim($s), 0, $max);
 }
 
+// Cloudflare's published address ranges (https://www.cloudflare.com/ips/).
+const CLOUDFLARE_RANGES = [
+    '173.245.48.0/20', '103.21.244.0/22', '103.22.200.0/22', '103.31.4.0/22', '141.101.64.0/18',
+    '108.162.192.0/18', '190.93.240.0/20', '188.114.96.0/20', '197.234.240.0/22', '198.41.128.0/17',
+    '162.158.0.0/15', '104.16.0.0/13', '104.24.0.0/14', '172.64.0.0/13', '131.0.72.0/22',
+    '2400:cb00::/32', '2606:4700::/32', '2803:f800::/32', '2405:b500::/32', '2405:8100::/32',
+    '2a06:98c0::/29', '2c0f:f248::/32',
+];
+
+function ip_in_range(string $ip, string $cidr): bool
+{
+    [$net, $bits] = explode('/', $cidr);
+    $a = @inet_pton($ip);
+    $b = @inet_pton($net);
+    if ($a === false || $b === false || strlen($a) !== strlen($b)) {
+        return false;
+    }
+    $bits = (int)$bits;
+    $bytes = intdiv($bits, 8);
+    if (strncmp($a, $b, $bytes) !== 0) {
+        return false;
+    }
+    if ($bits % 8 === 0) {
+        return true;
+    }
+    $mask = (0xFF << (8 - $bits % 8)) & 0xFF;
+    return (ord($a[$bytes]) & $mask) === (ord($b[$bytes]) & $mask);
+}
+
+/** The visitor's address. Behind Cloudflare, use the address Cloudflare reports, but only if the request really came from Cloudflare. */
 function client_ip(): string
 {
-    return (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $remote = (string)($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+    $cf = (string)($_SERVER['HTTP_CF_CONNECTING_IP'] ?? '');
+    if ($cf !== '' && filter_var($cf, FILTER_VALIDATE_IP)) {
+        foreach (CLOUDFLARE_RANGES as $r) {
+            if (ip_in_range($remote, $r)) {
+                return $cf;
+            }
+        }
+    }
+    return $remote;
 }
 
 // ---------- Storage (JSON files with locking) ----------
@@ -558,4 +600,50 @@ function origin_allowed(string $origin): bool
 {
     return in_array($origin, PUBLIC_ORIGINS, true)
         || ($origin !== '' && $origin === getenv('BCHOA_TEST_ORIGIN'));
+}
+
+// ---------- Simple .zip writer (no compression; no PHP extensions needed) ----------
+
+/**
+ * Write a .zip file. $entries: [name => ['file' => path] | ['data' => string]].
+ * Files are copied in chunks, so large recordings don't need to fit in memory.
+ */
+function zip_write(string $zipPath, array $entries): bool
+{
+    $out = fopen($zipPath, 'wb');
+    if (!$out) {
+        return false;
+    }
+    $central = '';
+    $count = 0;
+    [$dosTime, $dosDate] = (function () {
+        $t = getdate();
+        return [($t['hours'] << 11) | ($t['minutes'] << 5) | intdiv($t['seconds'], 2),
+                (($t['year'] - 1980) << 9) | ($t['mon'] << 5) | $t['mday']];
+    })();
+    foreach ($entries as $name => $src) {
+        if (isset($src['file'])) {
+            $size = (int)filesize($src['file']);
+            $crc = hexdec(hash_file('crc32b', $src['file']));
+        } else {
+            $size = strlen($src['data']);
+            $crc = hexdec(hash('crc32b', $src['data']));
+        }
+        $offset = ftell($out);
+        fwrite($out, pack('VvvvvvVVVvv', 0x04034b50, 20, 0x0800, 0, $dosTime, $dosDate, $crc, $size, $size, strlen($name), 0) . $name);
+        if (isset($src['file'])) {
+            $in = fopen($src['file'], 'rb');
+            stream_copy_to_stream($in, $out);
+            fclose($in);
+        } else {
+            fwrite($out, $src['data']);
+        }
+        $central .= pack('VvvvvvvVVVvvvvvVV', 0x02014b50, 20, 20, 0x0800, 0, $dosTime, $dosDate, $crc, $size, $size,
+            strlen($name), 0, 0, 0, 0, 0, $offset) . $name;
+        $count++;
+    }
+    $cdOffset = ftell($out);
+    fwrite($out, $central);
+    fwrite($out, pack('VvvvvVVv', 0x06054b50, 0, 0, $count, $count, strlen($central), $cdOffset, 0));
+    return fclose($out);
 }

@@ -18,3 +18,9 @@ DirectoryIndex index.php
     Deny from all
   </IfModule>
 </FilesMatch>
+
+# Do not advertise software versions
+<IfModule mod_headers.c>
+  Header unset X-Powered-By
+  Header always unset X-Powered-By
+</IfModule>

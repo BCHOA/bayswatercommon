@@ -49,6 +49,9 @@ function page_settings(array $me): void
           . post_button('settings_test', ['what' => 'calendar'], 'Test calendar access', 'btn btn-quiet')
           . post_button('news_run', [], 'Check mailbox now', 'btn')
           . '</div></section>'
+          . '<section class="card"><h2>Backup</h2><p class="help">Download everything this website stores on the GoDaddy server (users, announcements, meeting minutes and their files, activity log). Passwords and keys entered on this page are left out. Keep the file private, and download a fresh copy every month or so.</p>'
+          . post_button('backup_download', [], 'Download backup (.zip)', 'btn')
+          . '</section>'
           . '<section class="card"><h2>Cron job</h2><p class="help">In cPanel &gt; Cron Jobs, add this command to run every 10 minutes (Minute: <code>*/10</code>, all other fields <code>*</code>):</p>'
           . '<pre class="code">' . h($cron) . '</pre></section>'
           . '<section class="card"><h2>Instructions for posters</h2><pre class="code">' . h(news_how_to($cfg['mailbox'])) . '</pre></section>';
@@ -120,6 +123,50 @@ function action_settings_test(array $me): void
         flash($err === '' ? 'ok' : 'error', $err === '' ? 'Google Calendar access works.' : $err);
     }
     redirect('p=settings');
+}
+
+/**
+ * Download everything the website stores on this server as one .zip: users (with password hashes),
+ * announcements, meeting minutes and their files, the activity log, and settings WITHOUT secrets.
+ */
+function action_backup_download(array $me): void
+{
+    $dir = data_dir();
+    $entries = [];
+    foreach (['users.json', 'announcements.json', 'minutes.json', 'audit.log', 'news-status.json'] as $f) {
+        if (is_file("$dir/$f")) {
+            $entries["data/$f"] = ['file' => "$dir/$f"];
+        }
+    }
+    $cfg = store_read('settings', []);
+    foreach (['mail_password', 'google_key'] as $secret) {
+        if (!empty($cfg[$secret])) {
+            $cfg[$secret] = '(removed from backup)';
+        }
+    }
+    $entries['data/settings-without-secrets.json'] = ['data' => json_encode($cfg, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)];
+    foreach (glob(minutes_dir() . '/*') ?: [] as $f) {
+        if (is_file($f)) {
+            $entries['files/minutes/' . basename($f)] = ['file' => $f];
+        }
+    }
+    $entries['README.txt'] = ['data' => 'Bayswater Common HOA website data backup, ' . now() . ".\r\n"
+        . "data/ = contents of /home/<account>/bchoa-data (restore there). files/minutes/ = the admin site's files/minutes folder.\r\n"
+        . "The news@ mailbox password and the Google key are NOT included; re-enter them in Settings after a restore.\r\n"
+        . "users.json holds password HASHES (not passwords). Keep this file private.\r\n"];
+    $tmp = tempnam(sys_get_temp_dir(), 'bchoa');
+    if ($tmp === false || !zip_write($tmp, $entries)) {
+        flash('error', 'The backup could not be created.');
+        redirect('p=settings');
+    }
+    audit($me['email'], 'downloaded a data backup');
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="bayswatercommon-data-' . date('Y-m-d') . '.zip"');
+    header('Content-Length: ' . filesize($tmp));
+    header('Cache-Control: no-store');
+    readfile($tmp);
+    @unlink($tmp);
+    exit;
 }
 
 function action_news_run(array $me): void
