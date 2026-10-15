@@ -22,20 +22,24 @@ function page_settings(array $me): void
 
     $body = '<h1>Settings</h1>'
           . '<section class="card"><h2>Posting by email</h2>'
-          . '<p class="help">People on the Users list can email <strong>' . h($cfg['mailbox']) . '</strong> to post an announcement, or to add a Google Calendar event (subject starting with "Calendar:"). '
+          . '<p class="help">People on the Users list can email <strong>' . h(posting_address($cfg)) . '</strong> to post an announcement, or to add a Google Calendar event (subject starting with "Calendar:"). '
           . 'Mail from anyone else is forwarded to the board for approval. Problems are reported back to the sender.</p>'
           . $status
           . ($imapOk ? '' : '<div class="flash error">This server\'s PHP cannot read mailboxes (IMAP extension missing).</div>')
           . '<form method="post" action="?p=settings_save">' . csrf_field()
           . '<label class="check"><input type="checkbox" name="news_enabled" value="1"' . ($cfg['news_enabled'] ? ' checked' : '') . '> Email posting is on</label>'
           . '<div class="row">'
-          . field('Mailbox address', input('mailbox', $cfg['mailbox'], 'email', 'required'))
-          . field('Mailbox password', input('mail_password', '', 'password', 'autocomplete="new-password" placeholder="' . ($cfg['mail_password'] !== '' ? '•••••• saved (leave blank to keep)' : 'not set') . '"'))
+          . field('Mailbox the website signs in to', input('mailbox', $cfg['mailbox'], 'email', 'required'), 'e.g. bayswatercommon@gmail.com')
+          . field('Mailbox password', input('mail_password', '', 'password', 'autocomplete="new-password" placeholder="' . ($cfg['mail_password'] !== '' ? '•••••• saved (leave blank to keep)' : 'not set') . '"'),
+                  'For Gmail, use an <strong>app password</strong>, not the normal password.')
           . '</div><div class="row">'
+          . field('Posting address (optional)', input('only_to', $cfg['only_to'], 'email', 'placeholder="e.g. bayswatercommon+news@gmail.com"'),
+                  'If set, only mail sent to this address is handled; everything else in the mailbox is left alone.')
           . field('Board email (approvals go here)', input('board_email', $cfg['board_email'], 'email', 'required'))
+          . '</div><div class="row">'
           . field('Days to show if no end date', input('default_days', (string)$cfg['default_days'], 'number', 'min="1" max="90"'))
           . '</div>'
-          . '<details><summary>Mail server details (normally unchanged)</summary><div class="row">'
+          . '<details' . ($cfg['imap_host'] !== SETTINGS_DEFAULT['imap_host'] ? ' open' : '') . '><summary>Mail servers (GoDaddy: imap.secureserver.net and smtpout.secureserver.net; Gmail: imap.gmail.com and smtp.gmail.com; ports 993 and 465)</summary><div class="row">'
           . field('IMAP server', input('imap_host', $cfg['imap_host']))
           . field('IMAP port', input('imap_port', (string)$cfg['imap_port'], 'number'))
           . '</div><div class="row">'
@@ -67,7 +71,7 @@ function page_settings(array $me): void
           . '</section>'
           . '<section class="card"><h2>Cron job</h2><p class="help">In cPanel &gt; Cron Jobs, add this command to run every 10 minutes (Minute: <code>*/10</code>, all other fields <code>*</code>):</p>'
           . '<pre class="code">' . h($cron) . '</pre></section>'
-          . '<section class="card"><h2>Instructions for posters</h2><pre class="code">' . h(news_how_to($cfg['mailbox'])) . '</pre></section>';
+          . '<section class="card"><h2>Instructions for posters</h2><pre class="code">' . h(news_how_to(posting_address($cfg))) . '</pre></section>';
     render('Settings', $body, $me, 'settings');
 }
 
@@ -83,6 +87,7 @@ function action_settings_save(array $me): void
         'imap_port'    => (int)($_POST['imap_port'] ?? $cfg['imap_port']) ?: 993,
         'smtp_host'    => clean_line((string)($_POST['smtp_host'] ?? $cfg['smtp_host']), 200),
         'smtp_port'    => (int)($_POST['smtp_port'] ?? $cfg['smtp_port']) ?: 465,
+        'only_to'      => strtolower(clean_line((string)($_POST['only_to'] ?? ''), 200)),
         'calendar_id'  => clean_line((string)($_POST['calendar_id'] ?? $cfg['calendar_id']), 300),
         'gas_url'      => clean_line((string)($_POST['gas_url'] ?? ''), 300),
     ];
@@ -90,7 +95,8 @@ function action_settings_save(array $me): void
         flash('error', 'The Apps Script web app URL should look like https://script.google.com/macros/s/…/exec. Nothing was saved.');
         redirect('p=settings');
     }
-    if (!filter_var($ch['mailbox'], FILTER_VALIDATE_EMAIL) || !filter_var($ch['board_email'], FILTER_VALIDATE_EMAIL)) {
+    if (!filter_var($ch['mailbox'], FILTER_VALIDATE_EMAIL) || !filter_var($ch['board_email'], FILTER_VALIDATE_EMAIL)
+        || ($ch['only_to'] !== '' && !filter_var($ch['only_to'], FILTER_VALIDATE_EMAIL))) {
         flash('error', 'Please enter valid mailbox and board email addresses.');
         redirect('p=settings');
     }
@@ -125,13 +131,13 @@ function action_settings_test(array $me): void
         } else {
             $im = @imap_open('{' . $cfg['imap_host'] . ':' . (int)$cfg['imap_port'] . '/imap/ssl}INBOX', $cfg['mailbox'], $cfg['mail_password'], OP_READONLY, 1);
             $err = $im ? '' : (imap_last_error() ?: 'login failed');
-            $count = $im ? imap_num_msg($im) : 0;
+            $count = $im ? count(imap_search($im, news_search_criteria($cfg)) ?: []) : 0;
             if ($im) {
                 imap_close($im);
             }
             imap_errors();
         }
-        flash($err === '' ? 'ok' : 'error', $err === '' ? "Mailbox login works. $count message(s) waiting in the inbox." : "Mailbox test failed: $err");
+        flash($err === '' ? 'ok' : 'error', $err === '' ? "Mailbox login works. $count message(s) waiting for " . posting_address($cfg) . "." : "Mailbox test failed: $err");
     } elseif ($what === 'email') {
         $err = send_mail($cfg, $me['email'], 'Test email from the Bayswater Common website',
             "This is a test message sent from {$cfg['mailbox']} by the website admin.\n\nIf you received it, outgoing email works.\n");

@@ -273,6 +273,7 @@ function handle_news_message(array $msg, array $cfg, array $io): array
 {
     $from = strtolower(trim($msg['from']));
     $subject = $msg['subject'];
+    $postAddr = posting_address($cfg);
     if ($from === '' || is_automatic_mail($from, $msg['headers'], $cfg['mailbox'])) {
         return ['folder' => 'Ignored', 'log' => "ignored automatic message from $from: $subject"];
     }
@@ -285,9 +286,9 @@ function handle_news_message(array $msg, array $cfg, array $io): array
         $why = $forged ? 'WARNING: the mail system reports this sender address may be FORGED (DMARC failed).'
              : ($user ? 'The sender is on the website user list, but their access is turned off or expired.'
                       : 'The sender is not on the website user list.');
-        $text = "A message was sent to {$cfg['mailbox']} and needs a board member's approval before it is posted.\n\n"
+        $text = "A message was sent to {$postAddr} and needs a board member's approval before it is posted.\n\n"
               . "$why\n\nTo post it, sign in at https://admin.bayswatercommon.org/ and add it as an announcement, "
-              . "or forward it to {$cfg['mailbox']} from your own (listed) address.\n\n"
+              . "or forward it to {$postAddr} from your own (listed) address.\n\n"
               . "----- Original message -----\nFrom: " . trim($msg['from_name'] . " <$from>") . "\nSubject: $subject\n\n" . trim($msg['body']) . "\n";
         $err = ($io['send'])($cfg['board_email'], "[Needs approval] $subject", $text, ['reply_to' => $from]);
         return ['folder' => $err === '' ? 'Forwarded' : 'Rejected',
@@ -296,8 +297,8 @@ function handle_news_message(array $msg, array $cfg, array $io): array
 
     $p = parse_news_email($subject, $msg['body'], $io['today'], (int)$cfg['default_days']);
     if (isset($p['error'])) {
-        $reply("Not posted: $subject", "Your message to {$cfg['mailbox']} was NOT posted.\n\nProblem: {$p['error']}\n\n"
-            . "Please correct it and send it again.\n\n" . news_how_to($cfg['mailbox']));
+        $reply("Not posted: $subject", "Your message to {$postAddr} was NOT posted.\n\nProblem: {$p['error']}\n\n"
+            . "Please correct it and send it again.\n\n" . news_how_to($postAddr));
         return ['folder' => 'Rejected', 'log' => "rejected from $from \"$subject\": {$p['error']}"];
     }
 
@@ -306,7 +307,7 @@ function handle_news_message(array $msg, array $cfg, array $io): array
         [$link, $err] = ($io['add_calendar'])($e);
         if ($err !== '') {
             $reply("Not added to calendar: $subject", "Your calendar event was NOT added.\n\nProblem: $err\n\n"
-                . "If this keeps happening, please contact a website admin.\n\n" . news_how_to($cfg['mailbox']));
+                . "If this keeps happening, please contact a website admin.\n\n" . news_how_to($postAddr));
             return ['folder' => 'Rejected', 'log' => "calendar event from $from \"{$e['title']}\" failed: $err"];
         }
         $when = nice_date($e['date']) . ($e['end_date'] && $e['end_date'] !== $e['date'] ? ' to ' . nice_date($e['end_date']) : '')
@@ -412,9 +413,16 @@ function decode_mime_header(string $s): string
  * Check the news@ mailbox once. Returns ['ok' => bool, 'summary' => text, 'log' => [lines]].
  * Safe to run from cron or from the dashboard; a lock stops two runs overlapping.
  */
+/** IMAP search: all messages, or only those sent to the posting address. */
+function news_search_criteria(array $cfg): string
+{
+    return $cfg['only_to'] !== '' ? 'TO "' . str_replace(['"', '\\'], '', $cfg['only_to']) . '"' : 'ALL';
+}
+
 function run_news(): array
 {
     $cfg = settings();
+    $postAddr = posting_address($cfg);
     if (!$cfg['news_enabled']) {
         return ['ok' => true, 'summary' => 'Email posting is turned off in Settings.', 'log' => []];
     }
@@ -468,7 +476,8 @@ function run_news(): array
     ];
 
     $log = [];
-    $nums = imap_search($im, 'ALL') ?: [];
+    // With a posting address set (e.g. bayswatercommon+news@gmail.com), leave all other mail alone.
+    $nums = imap_search($im, news_search_criteria($cfg)) ?: [];
     foreach (array_slice($nums, 0, NEWS_MAX_PER_RUN) as $n) {
         $h = imap_headerinfo($im, $n);
         $f = $h->from[0] ?? null;
@@ -482,7 +491,7 @@ function run_news(): array
         ];
         $r = handle_news_message($msg, $cfg, $io);
         $log[] = $r['log'];
-        audit($cfg['mailbox'], $r['log']);
+        audit($postAddr, $r['log']);
         if (!@imap_mail_move($im, (string)$n, $folder($r['folder']))) {
             imap_delete($im, (string)$n);     // could not file it; delete so it is not handled twice
         }

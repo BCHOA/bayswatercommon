@@ -11,7 +11,8 @@ const SETTINGS_DEFAULT = [
     'news_enabled'  => false,
     'imap_host'     => 'imap.secureserver.net',
     'imap_port'     => 993,
-    'mailbox'       => 'news@bayswatercommon.org',
+    'mailbox'       => 'news@bayswatercommon.org',   // the mailbox the website logs in to
+    'only_to'       => '',               // if set, only mail sent to this address is handled (e.g. a Gmail +news address)
     'mail_password' => '',
     'smtp_host'     => 'smtpout.secureserver.net',
     'smtp_port'     => 465,
@@ -23,6 +24,12 @@ const SETTINGS_DEFAULT = [
     'gas_secret'    => '',               // shared code that the script checks
     'default_days'  => 14,               // how long an emailed announcement shows if no end date is given
 ];
+
+/** The address people send posts to: the filter address if one is set, else the mailbox itself. */
+function posting_address(array $cfg): string
+{
+    return (string)($cfg['only_to'] ?: $cfg['mailbox']);
+}
 
 function settings(): array
 {
