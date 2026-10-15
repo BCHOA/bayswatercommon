@@ -101,25 +101,61 @@ function clean_email_body(string $body): string
     return trim(implode("\n", $out));
 }
 
-/** Split leading "Key: value" lines from the text. Returns [fields (lower-case keys), rest]. */
-function split_fields(string $text, array $known): array
+/**
+ * Pull "Key: value" lines out of the text, wherever they are ("Start 10/14/2026" at the end works too).
+ * $spec: field => [kind, [names...]] with kind 'date', 'time' or 'text'.
+ * A line counts when its first words are one of the names, followed by a colon or dash,
+ * or (for dates and times) simply by a value that really is a date/time.
+ * Returns [fields (field => raw value), the remaining text].
+ */
+function extract_fields(string $text, array $spec): array
 {
-    $lines = explode("\n", $text);
     $fields = [];
-    $i = 0;
-    for (; $i < count($lines); $i++) {
-        $t = trim($lines[$i]);
-        if ($t === '' && !$fields) {
-            continue;                      // skip blank lines before the fields
+    $rest = [];
+    foreach (explode("\n", $text) as $line) {
+        $t = trim($line);
+        $hit = false;
+        foreach ($spec as $field => [$kind, $names]) {
+            if (isset($fields[$field])) {
+                continue;
+            }
+            usort($names, fn($a, $b) => strlen($b) <=> strlen($a));   // try "end date" before "end"
+            foreach ($names as $n) {
+                if (!preg_match('/^' . preg_quote($n, '/') . '\b\s*([:\-–—])?\s*(\S.*)$/iu', $t, $m)) {
+                    continue;
+                }
+                $sep = $m[1] ?? '';
+                $val = trim($m[2]);
+                $looksRight = $kind === 'date' ? parse_human_date($val) !== null
+                            : ($kind === 'time' ? (parse_time_range($val) !== null || (bool)preg_match('/^all\s*day$/i', $val)) : false);
+                if ($sep !== '' || $looksRight) {
+                    $fields[$field] = $val;
+                    $hit = true;
+                }
+                break;
+            }
+            if ($hit) {
+                break;
+            }
         }
-        if (preg_match('/^([A-Za-z][A-Za-z ]{1,20}):\s*(.*)$/', $t, $m) && in_array(strtolower(trim($m[1])), $known, true)) {
-            $fields[strtolower(trim($m[1]))] = trim($m[2]);
-            continue;
+        if (!$hit) {
+            $rest[] = rtrim($line);
         }
-        break;
     }
-    return [$fields, trim(implode("\n", array_slice($lines, $i)))];
+    return [$fields, trim(preg_replace("/\n{3,}/", "\n\n", implode("\n", $rest)) ?? '')];
 }
+
+const ANNOUNCE_FIELDS = [
+    'start' => ['date', ['start', 'starts', 'start date', 'starting', 'from', 'show from', 'begin', 'begins', 'post', 'post on', 'posted']],
+    'end'   => ['date', ['end', 'ends', 'end date', 'until', 'show until', 'expires', 'expire', 'expiration', 'finish', 'finishes',
+                         'through', 'thru', 'stop', 'remove', 'remove on', 'last day']],
+];
+const CALENDAR_FIELDS = [
+    'date'     => ['date', ['date', 'day', 'when', 'on', 'start', 'starts', 'start date']],
+    'end date' => ['date', ['end date', 'ends', 'end', 'until', 'through', 'thru', 'finish', 'last day']],
+    'time'     => ['time', ['time', 'times', 'hours', 'at']],
+    'location' => ['text', ['location', 'where', 'place', 'venue']],
+];
 
 /** First present field among several names, or ''. */
 function field_of(array $f, array $names): string
@@ -143,13 +179,13 @@ function parse_news_email(string $subject, string $body, string $today, int $def
 
     if (preg_match('/^calendar\s*:\s*(.*)$/i', $subject, $m)) {
         $title = clean_line($m[1], 120);
-        [$f, $desc] = split_fields($text, ['date', 'end date', 'time', 'location', 'where']);
+        [$f, $desc] = extract_fields($text, CALENDAR_FIELDS);
         if ($title === '') {
             return ['error' => 'The subject needs an event name after "Calendar:", for example "Calendar: Pool Opening Party".'];
         }
         $dateRaw = field_of($f, ['date']);
         if ($dateRaw === '') {
-            return ['error' => 'Please add a "Date:" line at the top of the message, for example "Date: 5/23/2026".'];
+            return ['error' => 'Please include a line with the event date, for example "Date: 5/23/2026".'];
         }
         $date = parse_human_date($dateRaw);
         if ($date === null) {
@@ -181,13 +217,13 @@ function parse_news_email(string $subject, string $body, string $today, int $def
         }
         return ['type' => 'calendar', 'data' => [
             'title' => $title, 'description' => mb_substr($desc, 0, 4000),
-            'location' => clean_line(field_of($f, ['location', 'where']), 200),
+            'location' => clean_line(field_of($f, ['location']), 200),
             'date' => $date, 'end_date' => $endDate, 'start_time' => $start, 'end_time' => $end,
         ]];
     }
 
     $subject = trim(preg_replace('/^announcement\s*:\s*/i', '', $subject) ?? $subject);
-    [$f, $msg] = split_fields($text, ['start', 'from', 'show from', 'end', 'until', 'show until', 'expires']);
+    [$f, $msg] = extract_fields($text, ANNOUNCE_FIELDS);
     if ($subject === '') {
         return ['error' => 'The email needs a subject. The subject becomes the announcement title.'];
     }
@@ -201,14 +237,14 @@ function parse_news_email(string $subject, string $body, string $today, int $def
         return ['error' => 'The message is too long (' . MAX_BODY . ' characters at most). Please shorten it, or link to a document.'];
     }
     $start = $today;
-    if (($raw = field_of($f, ['start', 'from', 'show from'])) !== '') {
+    if (($raw = field_of($f, ['start'])) !== '') {
         $start = parse_human_date($raw) ?? '';
         if ($start === '') {
             return ['error' => "The start date \"$raw\" was not understood. Please use a format like 5/23/2026 or May 23, 2026."];
         }
     }
     $end = date('Y-m-d', strtotime($start . " +$defaultDays days"));
-    if (($raw = field_of($f, ['end', 'until', 'show until', 'expires'])) !== '') {
+    if (($raw = field_of($f, ['end'])) !== '') {
         $end = parse_human_date($raw) ?? '';
         if ($end === '') {
             return ['error' => "The end date \"$raw\" was not understood. Please use a format like 6/6/2026 or June 6, 2026."];
@@ -231,14 +267,14 @@ function news_how_to(string $mailbox): string
     return "HOW TO POST BY EMAIL to $mailbox\n\n"
          . "Announcement:\n"
          . "  Subject: the announcement title\n"
-         . "  Body: optional date lines first, then the message, e.g.\n"
+         . "  Body: the message, plus optional date lines (anywhere), e.g.\n"
+         . "    The pool opens Saturday at 10 am. See the **calendar** for hours.\n"
          . "    Start: 5/23/2026\n"
          . "    End: 6/6/2026\n"
-         . "    The pool opens Saturday at 10 am. See the **calendar** for hours.\n"
          . "  Without dates, it shows from today for two weeks.\n\n"
          . "Calendar event:\n"
          . "  Subject: Calendar: event name\n"
-         . "  Body:\n"
+         . "  Body (lines in any order):\n"
          . "    Date: 5/23/2026\n"
          . "    Time: 6:00 PM - 8:00 PM   (leave out for an all-day event)\n"
          . "    Location: Pavilion        (optional)\n"
@@ -319,7 +355,11 @@ function handle_news_message(array $msg, array $cfg, array $io): array
     }
 
     $a = $p['data'];
-    ($io['add_announcement'])($a, $from);
+    if (!($io['add_announcement'])($a, $from)) {
+        $reply("Already posted: {$a['title']}", "This announcement is already on the website (you sent the same text recently), so it was not added again.\n\n"
+            . "To change or remove it, sign in at https://admin.bayswatercommon.org/\n");
+        return ['folder' => 'Processed', 'log' => "duplicate announcement from $from not added again: \"{$a['title']}\""];
+    }
     $reply("Posted: {$a['title']}", "Your announcement is on the website.\n\n"
         . "Title: {$a['title']}\nShows: " . nice_date($a['start_date']) . ' to ' . nice_date($a['expiry_date']) . "\n\n"
         . "See it at https://bayswatercommon.org/\n"
@@ -327,9 +367,16 @@ function handle_news_message(array $msg, array $cfg, array $io): array
     return ['folder' => 'Processed', 'log' => "announcement posted by $from: \"{$a['title']}\" ({$a['start_date']} to {$a['expiry_date']})"];
 }
 
-function add_email_announcement(array $a, string $email): void
+/** Add an emailed announcement. Returns false (and adds nothing) if the same person posted the same text in the last 3 days. */
+function add_email_announcement(array $a, string $email): bool
 {
-    store_update('announcements', ANN_DEFAULT, function (array &$d) use ($a, $email) {
+    return (bool)store_update('announcements', ANN_DEFAULT, function (array &$d) use ($a, $email) {
+        $since = date('Y-m-d H:i:s', strtotime('-3 days'));
+        foreach ($d['announcements'] as $x) {
+            if ($x['created_by'] === $email && $x['title'] === $a['title'] && $x['body'] === $a['body'] && $x['created_at'] >= $since) {
+                return false;
+            }
+        }
         $d['announcements'][] = [
             'id' => $d['next_id']++, 'title' => $a['title'], 'body' => $a['body'],
             'start_date' => $a['start_date'], 'expiry_date' => $a['expiry_date'],
@@ -489,7 +536,17 @@ function run_news(): array
             'headers' => (string)imap_fetchheader($im, $n),
             'body' => imap_message_text($im, $n),
         ];
-        $r = handle_news_message($msg, $cfg, $io);
+        // Never handle the same email twice (e.g. if a previous run was cut off before filing it).
+        $seen = $msg['message_id'] !== '' && in_array($msg['message_id'], store_read('news-seen', ['ids' => []])['ids'], true);
+        $r = $seen ? ['folder' => 'Processed', 'log' => "skipped an email already handled: \"{$msg['subject']}\""]
+                   : handle_news_message($msg, $cfg, $io);
+        if (!$seen && $msg['message_id'] !== '') {
+            store_update('news-seen', ['ids' => []], function (array &$d) use ($msg) {
+                $d['ids'][] = $msg['message_id'];
+                $d['ids'] = array_slice($d['ids'], -500);
+                return true;
+            });
+        }
         $log[] = $r['log'];
         audit($postAddr, $r['log']);
         if (!@imap_mail_move($im, (string)$n, $folder($r['folder']))) {
