@@ -13,7 +13,7 @@
 const SECRET = 'PASTE-THE-CODE-FROM-THE-WEBSITE-SETTINGS-PAGE';
 
 // The HOA calendar's ID (Google Calendar > the calendar's Settings > Integrate calendar > Calendar ID).
-const CALENDAR_ID = 'PASTE-THE-CALENDAR-ID';
+const CALENDAR_ID = 'bayswatercommon@gmail.com';
 
 const TIME_ZONE = 'America/New_York';
 
