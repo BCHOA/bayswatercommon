@@ -26,7 +26,7 @@
       item.className = 'announcement';
       var date = document.createElement('div');
       date.className = 'announcement-date';
-      date.textContent = 'Since ' + formatDate(a.start_date);
+      date.textContent = 'Posted ' + formatDate(a.start_date);
       item.appendChild(date);
       if (a.title) {
         var t = document.createElement('div');
