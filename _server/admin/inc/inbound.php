@@ -313,8 +313,17 @@ function handle_news_message(array $msg, array $cfg, array $io): array
     if ($from === '' || is_automatic_mail($from, $msg['headers'], $cfg['mailbox'])) {
         return ['folder' => 'Ignored', 'log' => "ignored automatic message from $from: $subject"];
     }
-    $reply = function (string $subj, string $text) use ($io, $msg, $from): string {
-        return ($io['send'])($from, $subj, $text, ['in_reply_to' => $msg['message_id'], 'auto' => true]);
+    $replyErr = '';
+    $reply = function (string $subj, string $text) use ($io, $msg, $from, &$replyErr): string {
+        $replyErr = ($io['send'])($from, $subj, $text, ['in_reply_to' => $msg['message_id'], 'auto' => true]);
+        return $replyErr;
+    };
+    // Note a failed reply in the activity log, so it never fails silently.
+    $noted = function (array $r) use (&$replyErr): array {
+        if ($replyErr !== '') {
+            $r['log'] .= " (the reply email could not be sent: $replyErr)";
+        }
+        return $r;
     };
     $user = user_by_email($from);
     $forged = sender_forged($msg['headers']);
@@ -335,7 +344,7 @@ function handle_news_message(array $msg, array $cfg, array $io): array
     if (isset($p['error'])) {
         $reply("Not posted: $subject", "Your message to {$postAddr} was NOT posted.\n\nProblem: {$p['error']}\n\n"
             . "Please correct it and send it again.\n\n" . news_how_to($postAddr));
-        return ['folder' => 'Rejected', 'log' => "rejected from $from \"$subject\": {$p['error']}"];
+        return $noted(['folder' => 'Rejected', 'log' => "rejected from $from \"$subject\": {$p['error']}"]);
     }
 
     if ($p['type'] === 'calendar') {
@@ -344,27 +353,27 @@ function handle_news_message(array $msg, array $cfg, array $io): array
         if ($err !== '') {
             $reply("Not added to calendar: $subject", "Your calendar event was NOT added.\n\nProblem: $err\n\n"
                 . "If this keeps happening, please contact a website admin.\n\n" . news_how_to($postAddr));
-            return ['folder' => 'Rejected', 'log' => "calendar event from $from \"{$e['title']}\" failed: $err"];
+            return $noted(['folder' => 'Rejected', 'log' => "calendar event from $from \"{$e['title']}\" failed: $err"]);
         }
         $when = nice_date($e['date']) . ($e['end_date'] && $e['end_date'] !== $e['date'] ? ' to ' . nice_date($e['end_date']) : '')
               . ($e['start_time'] ? ', ' . date('g:i A', strtotime($e['start_time'])) . ($e['end_time'] ? ' - ' . date('g:i A', strtotime($e['end_time'])) : '') : ', all day');
         $reply("Added to calendar: {$e['title']}", "Your event was added to the Bayswater Common calendar.\n\n"
             . "Event: {$e['title']}\nWhen: $when\n" . ($e['location'] ? "Where: {$e['location']}\n" : '')
             . "\nSee it at https://bayswatercommon.org/calendar.html" . ($link ? "\nOr in Google Calendar: $link" : '') . "\n");
-        return ['folder' => 'Processed', 'log' => "calendar event added by $from: \"{$e['title']}\" on {$e['date']}"];
+        return $noted(['folder' => 'Processed', 'log' => "calendar event added by $from: \"{$e['title']}\" on {$e['date']}"]);
     }
 
     $a = $p['data'];
     if (!($io['add_announcement'])($a, $from)) {
         $reply("Already posted: {$a['title']}", "This announcement is already on the website (you sent the same text recently), so it was not added again.\n\n"
             . "To change or remove it, sign in at https://admin.bayswatercommon.org/\n");
-        return ['folder' => 'Processed', 'log' => "duplicate announcement from $from not added again: \"{$a['title']}\""];
+        return $noted(['folder' => 'Processed', 'log' => "duplicate announcement from $from not added again: \"{$a['title']}\""]);
     }
     $reply("Posted: {$a['title']}", "Your announcement is on the website.\n\n"
         . "Title: {$a['title']}\nShows: " . nice_date($a['start_date']) . ' to ' . nice_date($a['expiry_date']) . "\n\n"
         . "See it at https://bayswatercommon.org/\n"
         . "To change or remove it, sign in at https://admin.bayswatercommon.org/\n");
-    return ['folder' => 'Processed', 'log' => "announcement posted by $from: \"{$a['title']}\" ({$a['start_date']} to {$a['expiry_date']})"];
+    return $noted(['folder' => 'Processed', 'log' => "announcement posted by $from: \"{$a['title']}\" ({$a['start_date']} to {$a['expiry_date']})"]);
 }
 
 /** Add an emailed announcement. Returns false (and adds nothing) if the same person posted the same text in the last 3 days. */

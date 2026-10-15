@@ -13,6 +13,14 @@ defined('BCHOA') or exit;
  */
 function send_mail(array $cfg, string $to, string $subject, string $text, array $opts = []): string
 {
+    // Preferred: send through the Google Apps Script (runs in the HOA Gmail account). GoDaddy's shared
+    // hosting blocks connections to outside mail servers, so direct SMTP usually can't work from there.
+    if ((string)$cfg['gas_url'] !== '') {
+        [, $err] = gas_call($cfg, ['action' => 'mail', 'mail' => [
+            'to' => $to, 'subject' => $subject, 'body' => $text, 'reply_to' => (string)($opts['reply_to'] ?? ''),
+        ]]);
+        return $err;
+    }
     if ($cfg['mail_password'] === '') {
         return 'The news@ mailbox password has not been entered in Settings.';
     }

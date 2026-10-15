@@ -27,6 +27,25 @@ function doPost(e) {
   if (!req || typeof req.secret !== 'string' || req.secret !== SECRET) {
     return reply({ ok: false, error: 'The calendar link code does not match. Check it on the website Settings page and in this script.' });
   }
+  // Send an email from this Gmail account (replies to people who post by email, board approval requests).
+  if (req.action === 'mail') {
+    const m = req.mail || {};
+    const to = String(m.to || '');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(to)) {
+      return reply({ ok: false, error: 'Bad recipient address.' });
+    }
+    const options = { name: 'Bayswater Common HOA' };
+    if (m.reply_to && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(m.reply_to))) {
+      options.replyTo = String(m.reply_to);
+    }
+    try {
+      GmailApp.sendEmail(to, String(m.subject || '').slice(0, 250), String(m.body || '').slice(0, 20000), options);
+    } catch (err) {
+      return reply({ ok: false, error: 'Gmail could not send: ' + err.message });
+    }
+    return reply({ ok: true, remaining: MailApp.getRemainingDailyQuota() });
+  }
+
   const cal = CalendarApp.getCalendarById(CALENDAR_ID);
   if (!cal) {
     return reply({ ok: false, error: 'Calendar not found. Check CALENDAR_ID in the script.' });
