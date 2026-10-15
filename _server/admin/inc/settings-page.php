@@ -7,6 +7,10 @@ defined('BCHOA') or exit;
 function page_settings(array $me): void
 {
     $cfg = settings();
+    if ($cfg['gas_secret'] === '') {
+        save_settings(['gas_secret' => new_link_code()]);
+        $cfg = settings();
+    }
     $st = news_status();
     $gEmail = google_client_email($cfg);
     $imapOk = function_exists('imap_open');
@@ -39,15 +43,24 @@ function page_settings(array $me): void
           . field('SMTP port', input('smtp_port', (string)$cfg['smtp_port'], 'number'))
           . '</div></details>'
           . '<h2 class="gap">Google Calendar</h2>'
-          . field('Calendar ID', input('calendar_id', $cfg['calendar_id'], 'text', 'required'), 'From Google Calendar &gt; Settings for this calendar &gt; Integrate calendar.')
+          . '<p class="help">"Calendar:" emails are added through a small Google Apps Script that runs in the HOA Google account. '
+          . 'Copy the <strong>calendar link code</strong> below into the script, deploy it as a web app, and paste its URL here.</p>'
+          . field('Calendar link code (copy into the script)', '<input type="text" readonly value="' . h($cfg['gas_secret']) . '" class="mono">',
+                  'Keep this private. To replace it, use "Make a new calendar code" under Tests.')
+          . field('Apps Script web app URL', input('gas_url', $cfg['gas_url'], 'url', 'placeholder="https://script.google.com/macros/s/…/exec"'),
+                  $cfg['gas_url'] !== '' ? 'Connected. Use "Test calendar access" below.' : 'Not connected yet.')
+          . '<details><summary>Advanced: Google Cloud service account instead (not needed with the script)</summary>'
+          . field('Calendar ID', input('calendar_id', $cfg['calendar_id'], 'text'), 'From Google Calendar &gt; Settings for this calendar &gt; Integrate calendar.')
           . field('Service-account key (JSON)', '<textarea name="google_key" rows="3" placeholder="' . ($gEmail !== '' ? 'Key saved for ' . h($gEmail) . ' (leave blank to keep)' : 'Paste the whole JSON key file here') . '"></textarea>',
-                  $gEmail !== '' ? 'Share the calendar with <strong>' . h($gEmail) . '</strong> and choose "Make changes to events".' : 'Not set up yet.')
+                  $gEmail !== '' ? 'Share the calendar with <strong>' . h($gEmail) . '</strong> and choose "Make changes to events".' : 'Not set up.')
+          . '</details>'
           . '<div class="buttons"><button class="btn" type="submit">Save settings</button></div></form></section>'
           . '<section class="card"><h2>Tests</h2><p class="help">Save your settings first.</p><div class="buttons">'
           . post_button('settings_test', ['what' => 'mailbox'], 'Test mailbox login', 'btn btn-quiet')
           . post_button('settings_test', ['what' => 'email'], 'Send me a test email', 'btn btn-quiet')
           . post_button('settings_test', ['what' => 'calendar'], 'Test calendar access', 'btn btn-quiet')
           . post_button('news_run', [], 'Check mailbox now', 'btn')
+          . post_button('settings_newcode', [], 'Make a new calendar code', 'btn btn-quiet', 'Make a new code? The calendar script will stop working until you paste the new code into it.')
           . '</div></section>'
           . '<section class="card"><h2>Backup</h2><p class="help">Download everything this website stores on the GoDaddy server (users, announcements, meeting minutes and their files, activity log). Passwords and keys entered on this page are left out. Keep the file private, and download a fresh copy every month or so.</p>'
           . post_button('backup_download', [], 'Download backup (.zip)', 'btn')
@@ -70,8 +83,13 @@ function action_settings_save(array $me): void
         'imap_port'    => (int)($_POST['imap_port'] ?? $cfg['imap_port']) ?: 993,
         'smtp_host'    => clean_line((string)($_POST['smtp_host'] ?? $cfg['smtp_host']), 200),
         'smtp_port'    => (int)($_POST['smtp_port'] ?? $cfg['smtp_port']) ?: 465,
-        'calendar_id'  => clean_line((string)($_POST['calendar_id'] ?? ''), 300),
+        'calendar_id'  => clean_line((string)($_POST['calendar_id'] ?? $cfg['calendar_id']), 300),
+        'gas_url'      => clean_line((string)($_POST['gas_url'] ?? ''), 300),
     ];
+    if ($ch['gas_url'] !== '' && !preg_match('#^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$#', $ch['gas_url'])) {
+        flash('error', 'The Apps Script web app URL should look like https://script.google.com/macros/s/…/exec. Nothing was saved.');
+        redirect('p=settings');
+    }
     if (!filter_var($ch['mailbox'], FILTER_VALIDATE_EMAIL) || !filter_var($ch['board_email'], FILTER_VALIDATE_EMAIL)) {
         flash('error', 'Please enter valid mailbox and board email addresses.');
         redirect('p=settings');
@@ -139,7 +157,7 @@ function action_backup_download(array $me): void
         }
     }
     $cfg = store_read('settings', []);
-    foreach (['mail_password', 'google_key'] as $secret) {
+    foreach (['mail_password', 'google_key', 'gas_secret'] as $secret) {
         if (!empty($cfg[$secret])) {
             $cfg[$secret] = '(removed from backup)';
         }
@@ -167,6 +185,19 @@ function action_backup_download(array $me): void
     readfile($tmp);
     @unlink($tmp);
     exit;
+}
+
+function new_link_code(): string
+{
+    return 'bchoa-' . bin2hex(random_bytes(16));
+}
+
+function action_settings_newcode(array $me): void
+{
+    save_settings(['gas_secret' => new_link_code()]);
+    audit($me['email'], 'made a new calendar link code');
+    flash('ok', 'New calendar link code made. Paste it into the Google Apps Script (SECRET) and deploy a new version.');
+    redirect('p=settings');
 }
 
 function action_news_run(array $me): void

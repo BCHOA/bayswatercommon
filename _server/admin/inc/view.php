@@ -47,7 +47,7 @@ function render(string $title, string $body, ?array $user = null, string $active
        . '<meta name="viewport" content="width=device-width,initial-scale=1">'
        . '<meta name="robots" content="noindex,nofollow">'
        . '<title>' . h($title) . ' | ' . APP_NAME . ' Admin</title>'
-       . '<link rel="stylesheet" href="assets/admin.css?v=4">'
+       . '<link rel="stylesheet" href="assets/admin.css?v=5">'
        . '</head><body>'
        . '<header class="top"><div class="wrap head"><div class="brand"><strong>' . APP_NAME . '</strong><span>Website admin</span></div>' . $who . '</div>'
        . ($nav ? '<nav class="wrap tabs" aria-label="Admin">' . $nav . '</nav>' : '')

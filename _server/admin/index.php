@@ -55,7 +55,7 @@ if (!empty($me['must_change'])) {
     page_password($me, $isPost, true);
 }
 
-$adminOnly = ['users', 'user_edit', 'user_save', 'user_reset', 'user_delete', 'activity', 'settings', 'settings_save', 'settings_test', 'news_run', 'backup_download'];
+$adminOnly = ['users', 'user_edit', 'user_save', 'user_reset', 'user_delete', 'activity', 'settings', 'settings_save', 'settings_test', 'news_run', 'backup_download', 'settings_newcode'];
 if (in_array($p, $adminOnly, true) && !is_admin($me)) {
     flash('error', 'Only admins can do that.');
     redirect();
@@ -82,6 +82,7 @@ switch ($p) {
     case 'settings':    page_settings($me);
     case 'settings_save': $isPost ? action_settings_save($me) : redirect('p=settings');
     case 'settings_test': $isPost ? action_settings_test($me) : redirect('p=settings');
+    case 'settings_newcode': $isPost ? action_settings_newcode($me) : redirect('p=settings');
     case 'backup_download': $isPost ? action_backup_download($me) : redirect('p=settings');
     case 'news_run':    $isPost ? action_news_run($me) : redirect('p=settings');
     default:            page_announcements($me);

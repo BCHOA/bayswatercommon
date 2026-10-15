@@ -18,7 +18,9 @@ const SETTINGS_DEFAULT = [
     'smtp_secure'   => 'ssl',            // 'ssl' (port 465) or 'none' (local testing only)
     'board_email'   => 'HOABoard@BayswaterCommon.org',
     'calendar_id'   => 'b8aed431852b1d617f9ed0cba642cc9ac6ceadeccc63cb632f44943e90e2362f@group.calendar.google.com',
-    'google_key'    => '',               // service-account JSON key
+    'google_key'    => '',               // service-account JSON key (alternative to the Apps Script bridge)
+    'gas_url'       => '',               // Google Apps Script web app URL (preferred; no Google Cloud needed)
+    'gas_secret'    => '',               // shared code that the script checks
     'default_days'  => 14,               // how long an emailed announcement shows if no end date is given
 ];
 

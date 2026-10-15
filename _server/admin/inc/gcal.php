@@ -20,11 +20,18 @@ function http_request(string $method, string $url, array $headers, string $body 
     if (function_exists('curl_init')) {
         $ch = curl_init($url);
         curl_setopt_array($ch, [
-            CURLOPT_CUSTOMREQUEST  => $method,
             CURLOPT_HTTPHEADER     => $headers,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 30,
+            // Apps Script answers a POST with a redirect to the result, which must be fetched with GET.
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS      => 5,
         ]);
+        if ($method === 'POST') {
+            curl_setopt($ch, CURLOPT_POST, true);      // (not CUSTOMREQUEST, so redirects switch to GET)
+        } elseif ($method !== 'GET') {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        }
         if ($body !== '') {
             curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
         }
@@ -53,7 +60,7 @@ function gcal_token(array $cfg): array
 {
     $key = json_decode((string)$cfg['google_key'], true);
     if (!is_array($key) || empty($key['client_email']) || empty($key['private_key'])) {
-        return ['', 'Google Calendar is not set up yet (no service-account key in Settings).'];
+        return ['', 'Google Calendar is not connected yet (see the Google Calendar section of the website Settings page).'];
     }
     $now = time();
     $jwt = b64url(json_encode(['alg' => 'RS256', 'typ' => 'JWT'])) . '.' . b64url(json_encode([
@@ -77,8 +84,33 @@ function gcal_token(array $cfg): array
  * Add an event. $ev: title, description, location, date (Y-m-d), end_date (Y-m-d, optional),
  * start_time / end_time ('H:i', optional; none = all-day). Returns [htmlLink, error].
  */
+/** Is the calendar connected through the Apps Script bridge (the preferred setup)? */
+function gcal_uses_script(array $cfg): bool
+{
+    return (string)$cfg['gas_url'] !== '';
+}
+
+/** Call the Apps Script bridge. Returns [answer array, error]. */
+function gas_call(array $cfg, array $payload): array
+{
+    if (!preg_match('#^https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec$#', (string)$cfg['gas_url'])) {
+        return [null, 'The Google Apps Script web app URL in Settings does not look right (it should end in /exec).'];
+    }
+    [$code, $body] = http_request('POST', $cfg['gas_url'], ['Content-Type: application/json'],
+        json_encode($payload + ['secret' => $cfg['gas_secret']]));
+    $j = json_decode($body, true);
+    if (!is_array($j)) {
+        return [null, "The Google calendar script did not answer properly (HTTP $code). Is it deployed with access for \"Anyone\"?"];
+    }
+    return [$j, !empty($j['ok']) ? '' : 'Google calendar script: ' . ($j['error'] ?? 'unknown error')];
+}
+
 function gcal_add_event(array $cfg, array $ev): array
 {
+    if (gcal_uses_script($cfg)) {
+        [, $err] = gas_call($cfg, ['action' => 'add', 'event' => $ev]);
+        return ['', $err];
+    }
     [$token, $err] = gcal_token($cfg);
     if ($err !== '') {
         return ['', $err];
@@ -118,6 +150,10 @@ function gcal_add_event(array $cfg, array $ev): array
 /** Check that the service account can read the calendar. Returns '' or an error. */
 function gcal_test(array $cfg): string
 {
+    if (gcal_uses_script($cfg)) {
+        [$j, $err] = gas_call($cfg, ['action' => 'test']);
+        return $err;
+    }
     [$token, $err] = gcal_token($cfg);
     if ($err !== '') {
         return $err;
