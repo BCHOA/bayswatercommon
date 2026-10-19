@@ -87,6 +87,13 @@ function doGet() {
   return reply({ ok: true, message: 'Bayswater Common calendar bridge is running.' });
 }
 
+// Run this once from the editor (choose it next to Run) to grant the "send email" permission.
+// It emails a short test message to this Google account.
+function authorizeEmail() {
+  GmailApp.sendEmail(Session.getEffectiveUser().getEmail(), 'Bayswater script email test',
+    'If you got this, the calendar script can send email.');
+}
+
 function reply(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
